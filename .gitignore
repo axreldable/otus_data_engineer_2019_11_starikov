@@ -1,0 +1,10 @@
+# mac
+.DS_Store
+
+# spark
+/spark-warehouse/
+
+# idea & sbt
+**/.idea
+**.iml
+**/target
