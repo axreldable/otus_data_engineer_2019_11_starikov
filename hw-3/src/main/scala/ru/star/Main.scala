@@ -1,5 +1,5 @@
 package ru.star
 
-class Main extends App {
+object Main extends App {
   println("Hello!")
 }
