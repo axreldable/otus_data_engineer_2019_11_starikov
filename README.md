@@ -1,7 +1,7 @@
 
 # Home tasks for Otus.ru course "Data Engineer"
 
-Group de-2019-11
+Group: de-2019-11
 
 ### Student
 Aleksei Starikov (Алексей Стариков)
