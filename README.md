@@ -8,5 +8,5 @@ Aleksei Starikov (Алексей Стариков)
 
 # ДЗ
 
-### ДЗ_3
+### [ДЗ_3](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/hw-3)
 Написать распределенное приложение для чтения JSON-файлов.
