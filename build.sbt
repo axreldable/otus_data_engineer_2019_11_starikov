@@ -2,7 +2,7 @@ name := "scala-hw"
 organization in ThisBuild := "ru.star"
 scalaVersion in ThisBuild := "2.11.12"
 parallelExecution in ThisBuild := false
-logLevel := Level.Info
+logLevel := Level.Warn
 
 lazy val global = project
   .in(file("."))
