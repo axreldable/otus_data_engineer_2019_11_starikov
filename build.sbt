@@ -8,13 +8,13 @@ lazy val global = project
   .in(file("."))
   .settings(version := "1.0.0")
   .aggregate(
-    hw_3
+    hw_4
   )
 
-lazy val hw_3 = project
-  .in(file("hw-3"))
+lazy val hw_4 = project
+  .in(file("hw-4"))
   .settings(
-    name := "hw-3",
+    name := "hw-4",
     version := "1.0.0",
     assemblySettings,
     libraryDependencies ++= Seq(

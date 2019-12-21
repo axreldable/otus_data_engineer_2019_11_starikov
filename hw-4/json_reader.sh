@@ -6,5 +6,5 @@ export SPARK_SUBMIT=/usr/local/Cellar/apache-spark/2.4.0/libexec/bin/spark-submi
 ${SPARK_SUBMIT} \
   --master local[*] \
   --class ru.star.JsonReader \
-${SPATH}/target/scala-2.11/hw-3_1.0.0.jar \
+${SPATH}/target/scala-2.11/hw-4_1.0.0.jar \
   ${SPATH}/src/main/resources/winemag-data-130k-v2.json
