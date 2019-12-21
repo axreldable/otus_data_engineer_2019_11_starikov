@@ -1,6 +1,8 @@
 package ru.star
 
 import org.apache.spark.sql.SparkSession
+import org.json4s.jackson.JsonMethods._
+import org.json4s.{DefaultFormats, _}
 
 object JsonReader extends App {
   private val jsonPath = args(0)
@@ -9,10 +11,11 @@ object JsonReader extends App {
     .builder()
     .enableHiveSupport()
     .getOrCreate()
+  implicit lazy val formats = DefaultFormats
 
-  private val r = spark.sparkContext.textFile(jsonPath)
-
-  r.take(10).foreach(println(_))
+  spark.sparkContext.textFile(jsonPath)
+    .map(parse(_).extract[Wine])
+    .foreach(println)
 
   spark.close()
 }

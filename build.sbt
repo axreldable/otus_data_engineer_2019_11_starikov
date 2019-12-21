@@ -20,6 +20,7 @@ lazy val hw_3 = project
     libraryDependencies ++= Seq(
       Dependencies.sparkCore % Provided,
       Dependencies.sparkSql % Provided,
+      Dependencies.json4Jackson,
       Dependencies.scalaTest % Test
     )
   )
