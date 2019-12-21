@@ -21,7 +21,9 @@ lazy val hw_4 = project
       Dependencies.sparkCore % Provided,
       Dependencies.sparkSql % Provided,
       Dependencies.json4Jackson,
-      Dependencies.scalaTest % Test
+      Dependencies.scalaTest % Test,
+      Dependencies.sparkTestingBase % Test,
+      Dependencies.jacksonModuleForTest % Test
     )
   )
 
