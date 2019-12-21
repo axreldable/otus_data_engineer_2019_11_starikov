@@ -15,5 +15,5 @@ sbt assembly
 
 ## ДЗ
 
-#### [ДЗ_4](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/hw-3)
+#### [ДЗ_4](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/hw-4)
 Написать распределенное приложение для чтения JSON-файлов.
