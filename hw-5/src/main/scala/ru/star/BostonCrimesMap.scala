@@ -15,8 +15,12 @@ object BostonCrimesMap extends App {
   private val crimeFacts = readCrimes(appParams.crimePath)
   private val offenseCodes = readOffenseCodes(appParams.offenseCodesPath)
 
-  private val crimesWithTypes = calculateCrimeStatistic(crimeFacts, offenseCodes)
-  crimesWithTypes.show()
+  private val crimeStatistic = calculateCrimeStatistic(crimeFacts, offenseCodes)
+
+  crimeStatistic
+    .coalesce(1)
+    .write
+    .parquet(appParams.resultOutputFolder)
 
   spark.close()
 
