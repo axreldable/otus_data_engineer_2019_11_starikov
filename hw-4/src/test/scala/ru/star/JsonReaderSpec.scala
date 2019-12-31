@@ -12,7 +12,7 @@ class JsonReaderSpec extends FlatSpec with DataFrameSuiteBase with Matchers {
   it should "read rdds from json file" in {
     implicit val iSpark: SparkSession = spark
 
-    val rddJsons = JsonReader.readJsons(Helper.resourceAbsolutePath("wines.json"))
+    val rddJsons = JsonReader.readJsons(Helper.resourceAbsolutePath("winemag-data-130k-v2.json"))
 
     val expectedRddJsons = Helper.expectedStringJsons()
 
@@ -20,7 +20,7 @@ class JsonReaderSpec extends FlatSpec with DataFrameSuiteBase with Matchers {
   }
 
   it should "transform json to Wine case class" in {
-    val winesSource = Source.fromFile(Helper.resourceAbsolutePath("wines.json"))
+    val winesSource = Source.fromFile(Helper.resourceAbsolutePath("winemag-data-130k-v2.json"))
     val wines = winesSource.getLines.toList.take(2)
       .map(JsonReader.toWine)
 

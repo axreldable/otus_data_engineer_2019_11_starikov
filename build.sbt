@@ -37,6 +37,7 @@ lazy val hw_5 = project
     libraryDependencies ++= Seq(
       Dependencies.sparkCore % Provided,
       Dependencies.sparkSql % Provided,
+      Dependencies.scopt,
       Dependencies.scalaTest % Test,
       Dependencies.sparkTestingBase % Test
     )
