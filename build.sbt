@@ -8,7 +8,8 @@ lazy val global = project
   .in(file("."))
   .settings(version := "1.0.0")
   .aggregate(
-    hw_4
+    hw_4,
+    hw_5
   )
 
 lazy val hw_4 = project
@@ -24,6 +25,20 @@ lazy val hw_4 = project
       Dependencies.scalaTest % Test,
       Dependencies.sparkTestingBase % Test,
       Dependencies.jacksonModuleForTest % Test
+    )
+  )
+
+lazy val hw_5 = project
+  .in(file("hw-5"))
+  .settings(
+    name := "hw-5",
+    version := "1.0.0",
+    assemblySettings,
+    libraryDependencies ++= Seq(
+      Dependencies.sparkCore % Provided,
+      Dependencies.sparkSql % Provided,
+      Dependencies.scalaTest % Test,
+      Dependencies.sparkTestingBase % Test
     )
   )
 
