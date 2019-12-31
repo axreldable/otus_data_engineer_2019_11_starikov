@@ -10,7 +10,7 @@ class JsonReaderSpec extends FlatSpec with DataFrameSuiteBase with Matchers {
   behavior of "JsonReader"
 
   it should "read rdds from json file" in {
-    implicit val iSpark: SparkSession = spark
+      implicit val iSpark: SparkSession = spark
 
     val rddJsons = JsonReader.readJsons(Helper.resourceAbsolutePath("winemag-data-130k-v2.json"))
 

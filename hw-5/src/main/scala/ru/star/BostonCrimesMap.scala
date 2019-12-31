@@ -1,8 +1,8 @@
 package ru.star
 
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions.{count, _}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object BostonCrimesMap extends App {
   private implicit val spark: SparkSession = SparkSession
@@ -10,54 +10,67 @@ object BostonCrimesMap extends App {
     .enableHiveSupport()
     .getOrCreate()
 
-  import spark.implicits._
-
   private val appParams = BostonCrimesMapParams(args)
 
-  private val crimeFacts = spark.read
-    .option("header", "true")
-    .option("inferSchema", "true")
-    .csv(appParams.crimePath)
-    .select("DISTRICT", "MONTH", "Lat", "Long", "OFFENSE_CODE")
-  crimeFacts.show()
+  private val crimeFacts = readCrimes(appParams.crimePath)
+  private val offenseCodes = readOffenseCodes(appParams.offenseCodesPath)
 
-  private val offenseCodes = spark.read
-    .option("header", "true")
-    .option("inferSchema", "true")
-    .csv(appParams.offenseCodesPath)
-    .withColumn("crime_type", trim(split('NAME, "-")(0)))
-    .select("CODE", "crime_type")
-  offenseCodes.show()
-
-  private val crimesWithTypes = crimeFacts.join(broadcast(offenseCodes), $"OFFENSE_CODE" === $"CODE")
-    .groupBy("DISTRICT")
-    .agg(
-      count("*").as("crimes_total"),
-      medianCrimesMonthly(collect_list($"MONTH")).as("crimes_monthly"),
-      topTypes(collect_list($"crime_type"), lit(3)).as("frequent_crime_types"),
-      averageValue(collect_list($"Lat")) as "lat",
-      averageValue(collect_list($"Long")) as "lng"
-    )
-
+  private val crimesWithTypes = calculateCrimeStatistic(crimeFacts, offenseCodes)
   crimesWithTypes.show()
 
   spark.close()
 
-  private[star] def median(inputList: List[Double]): Double = {
-    val count = inputList.size
-    if (count % 2 == 0) {
-      val l = count / 2 - 1
-      val r = l + 1
-      (inputList(l) + inputList(r)) / 2
-    } else
-      inputList(count / 2)
+  private[star] def calculateCrimeStatistic(crimeFacts: DataFrame, offenseCodes: DataFrame)
+                                           (implicit spark: SparkSession): DataFrame = {
+    import spark.implicits._
+
+    crimeFacts.join(broadcast(offenseCodes), $"OFFENSE_CODE" === $"CODE")
+      .groupBy("DISTRICT")
+      .agg(
+        count("*").as("crimes_total"),
+        medianCrimesMonthly(collect_list($"MONTH")).as("crimes_monthly"),
+        topTypes(collect_list($"crime_type"), lit(3)).as("frequent_crime_types"),
+        averageValue(collect_list($"Lat")) as "lat",
+        averageValue(collect_list($"Long")) as "lng"
+      )
+  }
+
+  private[star] def readCrimes(path: String)(implicit spark: SparkSession): DataFrame = {
+    spark.read
+      .option("header", "true")
+      .option("inferSchema", "true")
+      .csv(path)
+      .select("DISTRICT", "MONTH", "Lat", "Long", "OFFENSE_CODE")
+  }
+
+  private[star] def readOffenseCodes(path: String)(implicit spark: SparkSession): DataFrame = {
+    import spark.implicits._
+
+    spark.read
+      .option("header", "true")
+      .option("inferSchema", "true")
+      .csv(path)
+      .withColumn("crime_type", trim(split($"NAME", "-")(0)))
+      .select("CODE", "crime_type")
+  }
+
+  private[star] def median(seq: Seq[Int]): Int = {
+    val sortedSeq = seq.sortWith(_ < _)
+
+    if (seq.size % 2 != 0) {
+      sortedSeq(sortedSeq.size / 2)
+    }
+    else {
+      val (up, down) = sortedSeq.splitAt(seq.size / 2)
+      (up.last + down.head) / 2
+    }
   }
 
   private[star] def medianCrimesMonthly: UserDefinedFunction = udf((monthNumbers: Seq[Int]) => {
     val crimesPerMonth = monthNumbers
       .groupBy(identity)
       .mapValues(_.size).values
-      .toList.map(_.toDouble)
+      .toList
 
     median(crimesPerMonth)
   })
