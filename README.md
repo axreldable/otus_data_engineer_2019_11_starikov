@@ -26,3 +26,6 @@ sbt assembly
 Применить модель к потоку твитов в spark-streaming.
 ([create_spark_model_random_forest_hw.ipynb](https://github.com/axreldable/data-engineer/blob/master/spark_ml/notebooks/create_spark_model_random_forest_hw.ipynb), 
 [apply_model_hw.ipynb](https://github.com/axreldable/data-engineer/blob/master/spark_ml/notebooks/apply_model_hw.ipynb))
+
+#### [ДЗ_7](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-7)
+Создать снепшот аналитической таблицы из операционного хранилища.
