@@ -32,7 +32,7 @@ object BostonCrimesMap extends App {
       .groupBy("DISTRICT")
       .agg(
         count("*").as("crimes_total"),
-        medianCrimesMonthly(collect_list($"MONTH")).as("crimes_monthly"),
+        medianCrimesMonthly(collect_list($"MONTH"), collect_list($"YEAR")).as("crimes_monthly"),
         topTypes(collect_list($"crime_type"), lit(3)).as("frequent_crime_types"),
         averageValue(collect_list($"Lat")) as "lat",
         averageValue(collect_list($"Long")) as "lng"
@@ -44,7 +44,7 @@ object BostonCrimesMap extends App {
       .option("header", "true")
       .option("inferSchema", "true")
       .csv(path)
-      .select("DISTRICT", "MONTH", "Lat", "Long", "OFFENSE_CODE")
+      .select("DISTRICT", "MONTH", "YEAR", "Lat", "Long", "OFFENSE_CODE")
   }
 
   private[star] def readOffenseCodes(path: String)(implicit spark: SparkSession): DataFrame = {
@@ -70,8 +70,8 @@ object BostonCrimesMap extends App {
     }
   }
 
-  private[star] def medianCrimesMonthly: UserDefinedFunction = udf((monthNumbers: Seq[Int]) => {
-    val crimesPerMonth = monthNumbers
+  private[star] def medianCrimesMonthly: UserDefinedFunction = udf((monthNumbers: Seq[Int], yearNumbers: Seq[Int]) => {
+    val crimesPerMonth = monthNumbers.zip(yearNumbers)
       .groupBy(identity)
       .mapValues(_.size).values
       .toList
