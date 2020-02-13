@@ -17,5 +17,6 @@ https://www.kaggle.com/AnalyzeBoston/crimes-in-boston
 
 #### how to run
 ```
+sbt assembly
 ./boston_crimes.sh 
 ```
