@@ -22,8 +22,8 @@ object Helper {
         StructField("crimes_total", LongType, nullable = false),
         StructField("crimes_monthly", IntegerType, nullable = false),
         StructField("frequent_crime_types", StringType),
-        StructField("lat", DoubleType, nullable = false),
-        StructField("lng", DoubleType, nullable = false)
+        StructField("lat", DoubleType),
+        StructField("lng", DoubleType)
       )
     )
 

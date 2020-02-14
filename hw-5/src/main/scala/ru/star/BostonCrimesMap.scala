@@ -1,6 +1,6 @@
 package ru.star
 
-import org.apache.spark.sql.expressions.UserDefinedFunction
+import org.apache.spark.sql.expressions.{UserDefinedFunction, Window}
 import org.apache.spark.sql.functions.{count, _}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
@@ -28,14 +28,27 @@ object BostonCrimesMap extends App {
                                            (implicit spark: SparkSession): DataFrame = {
     import spark.implicits._
 
-    crimeFacts.join(broadcast(offenseCodes), $"OFFENSE_CODE" === $"CODE")
+    val crimes = crimeFacts.join(broadcast(offenseCodes), $"OFFENSE_CODE" === $"CODE")
+
+    val window = Window.partitionBy("DISTRICT").orderBy($"crime_type_count".desc)
+    val crimeTypesFrequent = crimes
+      .groupBy("DISTRICT", "crime_type")
+      .agg(count("*").as("crime_type_count"))
+      .withColumn("row_number", row_number.over(window))
+      .filter($"row_number" <= 3)
+      .drop("crime_type_count", "row_number")
+      .groupBy("DISTRICT")
+      .agg(array_join(collect_list($"crime_type"), ", ") as "frequent_crime_types")
+      .withColumnRenamed("DISTRICT", "DISTRICT_1")
+
+    crimes.join(crimeTypesFrequent, crimes("DISTRICT") <=> crimeTypesFrequent("DISTRICT_1"))
       .groupBy("DISTRICT")
       .agg(
         count("*").as("crimes_total"),
         medianCrimesMonthly(collect_list($"MONTH"), collect_list($"YEAR")).as("crimes_monthly"),
-        topTypes(collect_list($"crime_type"), lit(3)).as("frequent_crime_types"),
-        averageValue(collect_list($"Lat")) as "lat",
-        averageValue(collect_list($"Long")) as "lng"
+        first("frequent_crime_types").as("frequent_crime_types"),
+        avg($"Lat") as "lat",
+        avg($"Long") as "lng"
       )
   }
 
@@ -77,19 +90,5 @@ object BostonCrimesMap extends App {
       .toList
 
     median(crimesPerMonth)
-  })
-
-  private[star] def topTypes: UserDefinedFunction = udf((types: Seq[String], amount: Int) => {
-    types.groupBy(identity)
-      .mapValues(_.size)
-      .toList.sortBy({
-      case (typeName, count) => count
-    }).reverse.take(amount).map({
-      case (typeName, count) => typeName
-    }).mkString(", ")
-  })
-
-  private[star] def averageValue: UserDefinedFunction = udf((coords: Seq[Double]) => {
-    coords.sum / coords.length
   })
 }
