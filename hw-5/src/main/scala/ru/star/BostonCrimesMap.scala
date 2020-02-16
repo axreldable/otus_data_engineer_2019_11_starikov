@@ -3,6 +3,7 @@ package ru.star
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{count, _}
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.storage.StorageLevel
 
 object BostonCrimesMap extends App {
   private implicit val spark: SparkSession = SparkSession
@@ -29,6 +30,7 @@ object BostonCrimesMap extends App {
     import spark.implicits._
 
     val crimes = crimeFacts.join(broadcast(offenseCodes), $"OFFENSE_CODE" === $"CODE")
+    crimes.persist(StorageLevel.MEMORY_AND_DISK)
 
     val windowCrime = Window.partitionBy("DISTRICT").orderBy($"crime_type_count".desc)
     val crimeTypesFrequent = crimes
@@ -51,7 +53,7 @@ object BostonCrimesMap extends App {
       "group by DISTRICT_2")
 
 
-    crimes.join(crimeTypesFrequent, crimes("DISTRICT") <=> crimeTypesFrequent("DISTRICT_1"))
+    val result = crimes.join(crimeTypesFrequent, crimes("DISTRICT") <=> crimeTypesFrequent("DISTRICT_1"))
       .join(crimesMonthly, crimes("DISTRICT") <=> crimesMonthly("DISTRICT_2"))
       .groupBy("DISTRICT")
       .agg(
@@ -61,6 +63,9 @@ object BostonCrimesMap extends App {
         avg($"Lat") as "lat",
         avg($"Long") as "lng"
       )
+    crimes.unpersist()
+
+    result
   }
 
   private[star] def readCrimes(path: String)(implicit spark: SparkSession): DataFrame = {
