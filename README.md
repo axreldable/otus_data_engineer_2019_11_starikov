@@ -29,3 +29,6 @@ sbt assembly
 
 #### [ДЗ_7](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-7)
 Создать снепшот аналитической таблицы из операционного хранилища.
+
+#### [ДЗ_9](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-9)
+Написть API для работы с [Aerospike](https://www.aerospike.com/).
