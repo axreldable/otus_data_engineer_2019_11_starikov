@@ -1,6 +1,6 @@
 package ru.star
 
-import org.apache.spark.sql.expressions.{UserDefinedFunction, Window}
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{count, _}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
@@ -30,23 +30,34 @@ object BostonCrimesMap extends App {
 
     val crimes = crimeFacts.join(broadcast(offenseCodes), $"OFFENSE_CODE" === $"CODE")
 
-    val window = Window.partitionBy("DISTRICT").orderBy($"crime_type_count".desc)
+    val windowCrime = Window.partitionBy("DISTRICT").orderBy($"crime_type_count".desc)
     val crimeTypesFrequent = crimes
       .groupBy("DISTRICT", "crime_type")
       .agg(count("*").as("crime_type_count"))
-      .withColumn("row_number", row_number.over(window))
+      .withColumn("row_number", row_number.over(windowCrime))
       .filter($"row_number" <= 3)
       .drop("crime_type_count", "row_number")
       .groupBy("DISTRICT")
       .agg(array_join(collect_list($"crime_type"), ", ") as "frequent_crime_types")
       .withColumnRenamed("DISTRICT", "DISTRICT_1")
 
+    val crimesCountPerMonth = crimes
+      .groupBy("DISTRICT", "MONTH", "YEAR")
+      .agg(count("*").as("crime_per_month"))
+      .withColumnRenamed("DISTRICT", "DISTRICT_2")
+    crimesCountPerMonth.createOrReplaceTempView("crimesCountPerMonth")
+    val crimesMonthly = spark.sql("select DISTRICT_2, percentile_approx(crime_per_month, 0.5) as crime_per_month " +
+      "from crimesCountPerMonth " +
+      "group by DISTRICT_2")
+
+
     crimes.join(crimeTypesFrequent, crimes("DISTRICT") <=> crimeTypesFrequent("DISTRICT_1"))
+      .join(crimesMonthly, crimes("DISTRICT") <=> crimesMonthly("DISTRICT_2"))
       .groupBy("DISTRICT")
       .agg(
         count("*").as("crimes_total"),
-        medianCrimesMonthly(collect_list($"MONTH"), collect_list($"YEAR")).as("crimes_monthly"),
-        first("frequent_crime_types").as("frequent_crime_types"),
+        first($"crime_per_month").as("crimes_monthly"),
+        first($"frequent_crime_types").as("frequent_crime_types"),
         avg($"Lat") as "lat",
         avg($"Long") as "lng"
       )
@@ -70,25 +81,4 @@ object BostonCrimesMap extends App {
       .withColumn("crime_type", trim(split($"NAME", "-")(0)))
       .select("CODE", "crime_type")
   }
-
-  private[star] def median(seq: Seq[Int]): Int = {
-    val sortedSeq = seq.sortWith(_ < _)
-
-    if (seq.size % 2 != 0) {
-      sortedSeq(sortedSeq.size / 2)
-    }
-    else {
-      val (up, down) = sortedSeq.splitAt(seq.size / 2)
-      (up.last + down.head) / 2
-    }
-  }
-
-  private[star] def medianCrimesMonthly: UserDefinedFunction = udf((monthNumbers: Seq[Int], yearNumbers: Seq[Int]) => {
-    val crimesPerMonth = monthNumbers.zip(yearNumbers)
-      .groupBy(identity)
-      .mapValues(_.size).values
-      .toList
-
-    median(crimesPerMonth)
-  })
 }

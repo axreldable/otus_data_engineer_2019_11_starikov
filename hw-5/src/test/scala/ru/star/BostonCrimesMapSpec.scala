@@ -9,14 +9,6 @@ import ru.star.BostonCrimesMap.{calculateCrimeStatistic, readCrimes, readOffense
 class BostonCrimesMapSpec extends FlatSpec with DataFrameSuiteBase with Matchers {
   behavior of "BostonCrimesMap"
 
-  it should "calculate median" in {
-    val list = List(11, 9, 3, 5, 5)
-
-    val expectedMedian = 5
-
-    expectedMedian shouldEqual BostonCrimesMap.median(list)
-  }
-
   it should "calculate crime statistics" in {
     implicit val iSpark: SparkSession = spark
 
