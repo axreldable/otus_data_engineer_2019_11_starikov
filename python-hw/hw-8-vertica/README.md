@@ -2,7 +2,6 @@
 
 ## How to run Vertica
 ```
-make pull-vertica-image
 make run-vertica
 make run-dbadmin
 vsql -hlocalhost -Udbadmin
@@ -14,10 +13,11 @@ make stop-vertica
 ```
 
 ## How check hw
+1. Run Vertica and vsql console
 ```
-make pull-vertica-image
 make run-vertica
-docker cp ./data otus_hw_8_vertica:/home/dbadmin/
 make run-dbadmin
 vsql -hlocalhost -Udbadmin
 ```
+2. Create tables from `hw-ddl-script.sql` script
+3. Create data marts from `hw-dml-script.sql` script
