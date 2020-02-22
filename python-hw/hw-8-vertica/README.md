@@ -12,7 +12,7 @@ vsql -hlocalhost -Udbadmin
 make stop-vertica
 ```
 
-## How check hw
+## How to check hw
 1. Run Vertica and vsql console
 ```
 make run-vertica
