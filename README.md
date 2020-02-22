@@ -27,8 +27,11 @@ sbt assembly
 ([create_spark_model_random_forest_hw.ipynb](https://github.com/axreldable/data-engineer/blob/master/spark_ml/notebooks/create_spark_model_random_forest_hw.ipynb), 
 [apply_model_hw.ipynb](https://github.com/axreldable/data-engineer/blob/master/spark_ml/notebooks/apply_model_hw.ipynb))
 
-#### [ДЗ_7](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-7)
+#### [ДЗ_7](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-7-table-snap-shot)
 Создать снепшот аналитической таблицы из операционного хранилища.
 
-#### [ДЗ_9](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-9)
+#### [ДЗ_7](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-8-vertica)
+Создать витрину данных в Vertica.
+
+#### [ДЗ_9](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-9-aerospike)
 Написть API для работы с [Aerospike](https://www.aerospike.com/).
