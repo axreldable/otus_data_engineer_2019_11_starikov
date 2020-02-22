@@ -1,0 +1,182 @@
+id,name,country_id
+1,"Viña del Mar",1
+2,"Belém",2
+3,Firenze,3
+4,"Florianópolis",2
+5,"East London",4
+6,"奄美市",5
+7,Tyler,6
+8,"Rio de Janeiro",2
+9,Calgary,7
+10,Soacha,8
+11,"Los Angeles",6
+12,Hermosillo,9
+13,Bronx,6
+14,Gurnee,6
+15,Harrogate,10
+16,"Portimão",11
+17,"Maipú",1
+18,Riyadh,12
+19,Hillingdon,10
+20,"Ringkøbing-Skjern",13
+21,"Caxias do Sul",2
+22,Indianapolis,6
+23,London,10
+24,"Беларусь",14
+25,Terrassa,15
+26,"Bradford West Gwillimbury",7
+27,Limay,16
+28,"İzmir",17
+29,"José Carlos Paz",18
+30,"الجيزة",19
+31,Parsons,6
+32,"Málaga",15
+33,Kendall,6
+34,Florida,6
+35,Vosloorus,4
+36,Venise,3
+37,Concordia,18
+38,"Свободный",20
+39,"Guérande",16
+40,"Ürgüp",17
+41,Amsterdam,21
+42,Manchester,10
+43,"Creve Coeur",6
+44,"Bad Ems",22
+45,Moorpark,6
+46,Ibi,15
+47,"North Charleston",6
+48,Caracas,23
+49,Tucson,6
+50,Brasil,2
+51,Oklahoma,6
+52,Vernier,24
+53,"Capivari de Baixo",2
+54,Burjassot,15
+55,Perth,25
+56,Amersfoort,21
+57,Veracruz,9
+58,Zurich,24
+59,"Chajarí",18
+60,Valencia,15
+61,"Short Pump",6
+62,"Porto Alegre",2
+63,"İstanbul",17
+64,Clare,26
+65,"Alcalá de Henares",15
+66,"Torreón",9
+67,Recife,2
+68,"Las Condes",1
+69,"Alor Star",27
+70,Ukraina,28
+71,"La Plata",18
+72,Merlevenez,16
+73,Altamira,2
+74,"창원시",29
+75,"Fort Dodge",6
+76,Sunderland,10
+77,Cairo,19
+78,"North Carolina",6
+79,Glasgow,10
+80,Bromley,10
+81,Canoinhas,2
+82,"Fort Collins",6
+83,"Wichita Falls",6
+84,Alkmaar,21
+85,"São Vicente",2
+86,Uruguay,30
+87,Emmaus,6
+88,"Los Polvorines",18
+89,"La Norville",16
+90,Enfield,10
+91,Lincoln,6
+92,"Elbląg",31
+93,Ohio,6
+94,"Baldwin Park",6
+95,Itaituba,2
+96,Alanya,17
+97,"Cape Town",4
+98,Christiansburg,6
+99,Makaha,6
+100,Polska,31
+101,Jeddah,12
+102,Manhattan,6
+103,Munich,22
+104,"São Paulo",2
+105,Sacramento,6
+106,"Myrtle Grove",6
+107,Farnborough,10
+108,"Novo Hamburgo",2
+109,"South Miami Heights",6
+110,Piracicaba,2
+111,Ecuador,32
+112,Brentwood,6
+113,Portland,6
+114,Setubal,11
+115,"Ciudad Autónoma de Buenos Aires",18
+116,Augusta,6
+117,"Santa Bárbara d'Oeste",2
+118,"Taguig City",33
+119,"دبي",34
+120,"La Capital",18
+121,"Buenos Aires",18
+122,Durango,9
+123,"Uğurludağ",17
+124,"Juana Koslay",18
+125,"Vila Velha",2
+126,Oeiras,11
+127,"Петровский район",20
+128,Lotte,22
+129,Fortaleza,2
+130,Rawalpindi,35
+131,"Vitória",2
+132,Cascavel,2
+133,Oakland,6
+134,Williamsport,6
+135,Oldham,10
+136,Bostonia,6
+137,Nashville,6
+138,"Brasília",2
+139,Sacrofano,3
+140,Laplace,6
+141,"Colorado Springs",6
+142,"Bahía Blanca",18
+143,Central,36
+144,Altadena,6
+145,Palma,15
+146,Azerbaijan,37
+147,Maldonado,30
+148,Delaware,6
+149,"Niterói",2
+150,Falkirk,10
+151,Itapema,2
+152,"Ibagué",8
+153,Norwood,6
+154,Rendon,6
+155,"Scott Lake",6
+156,Denizli,17
+157,Barnburgh,10
+158,Campinas,2
+159,Konya,17
+160,"الرس",12
+161,"Republic of Serbia",38
+162,"Kadıköy",17
+163,Fraser,6
+164,Posadas,18
+165,Marmaris,17
+166,"Uberlândia",2
+167,Charlotte,6
+168,Punjab,35
+169,Odivelas,11
+170,Chile,1
+171,"Capital - Córdoba",18
+172,"千葉市 美浜区",5
+173,"江戸川区",5
+174,"نويريه",12
+175,Miraflores,39
+176,"College Park",6
+177,Austin,6
+178,Standish,10
+179,Venezuela,23
+180,"Almirante Brown",18
+181,Texas,6
