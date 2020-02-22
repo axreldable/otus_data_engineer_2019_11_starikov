@@ -30,7 +30,7 @@ sbt assembly
 #### [ДЗ_7](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-7-table-snap-shot)
 Создать снепшот аналитической таблицы из операционного хранилища.
 
-#### [ДЗ_7](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-8-vertica)
+#### [ДЗ_8](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-8-vertica)
 Создать витрину данных в Vertica.
 
 #### [ДЗ_9](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-9-aerospike)
