@@ -30,10 +30,10 @@ sbt assembly
 Создать снепшот аналитической таблицы из операционного хранилища.
 
 #### [ДЗ_8](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-8-vertica)
-Создать витрину данных в Vertica.
+Создать витрину данных в [Vertica](https://www.vertica.com).
 
 #### [ДЗ_9](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-9-aerospike)
-Написть API для работы с [Aerospike](https://www.aerospike.com/).
+Написть API для работы с [Aerospike](https://www.aerospike.com).
 
 #### [ДЗ_10](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-10-hive)
 Практика с Hive на CDH.  
