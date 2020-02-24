@@ -34,3 +34,8 @@ sbt assembly
 
 #### [ДЗ_9](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-9-aerospike)
 Написть API для работы с [Aerospike](https://www.aerospike.com/).
+
+#### [ДЗ_10](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-10-hive)
+Практика с Hive на CDH.  
+Развернуть дистрибутив CDH.  
+Самостоятельно проделать манипуляции с Hive с приложенными скриптами.
