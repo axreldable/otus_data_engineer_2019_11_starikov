@@ -74,6 +74,7 @@ object BostonCrimesMap extends App {
       .option("inferSchema", "true")
       .csv(path)
       .select("DISTRICT", "MONTH", "YEAR", "Lat", "Long", "OFFENSE_CODE")
+      .distinct()
   }
 
   private[star] def readOffenseCodes(path: String)(implicit spark: SparkSession): DataFrame = {
@@ -85,5 +86,6 @@ object BostonCrimesMap extends App {
       .csv(path)
       .withColumn("crime_type", trim(split($"NAME", "-")(0)))
       .select("CODE", "crime_type")
+      .distinct()
   }
 }
