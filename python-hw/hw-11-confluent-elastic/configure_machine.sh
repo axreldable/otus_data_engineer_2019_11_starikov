@@ -19,3 +19,6 @@ cd cp-demo
 chmod u+x *.sh
 
 sudo ./scripts/start.sh
+
+sudo ./set_elasticsearch_mapping_lang.sh
+sudo ./submit_elastic_sink_lang_config.sh
