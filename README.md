@@ -40,6 +40,6 @@ sbt assembly
 Развернуть дистрибутив CDH.  
 Самостоятельно проделать манипуляции с Hive с приложенными скриптами.
 
-#### [ДЗ_11](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-11-elastic-search)
+#### [ДЗ_11](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/tree/master/python-hw/hw-11-confluent-elastic)
 В этом задании мы попробуем развернуть крупную демонстрационную систему от Confluent, и использовать ее для создания 
 простого стриминг приложения и отчета
