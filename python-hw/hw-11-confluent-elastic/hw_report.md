@@ -149,10 +149,21 @@ nt","schema.ignore":"true","name":"elasticsearch-ksql-lang"},"tasks":[],"type":"
 7. Добавьте index-pattern - Kibana UI -> Management -> Index patterns -> Create Index Pattern -> Index name or pattern: wikilang -> кнопка Create
 ![create_index_wikilang](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/blob/master/python-hw/hw-11-confluent-elastic/images/create_index_wikilang.png)
 
-8. Используя полученные знания и документацию ответьте на вопросы:
+8. Используя полученные знания и документацию ответьте на вопросы:  
 a) Опишите что делает каждая из этих операций?
+```
+set_elasticsearch_mapping_lang.sh - создает index wikilang с маппингом полей
+submit_elastic_sink_lang_config.sh - запуск записи сообщений топика Kafka wikilang в index Elasticsearch wikilang
+```
 б) Зачем Elasticsearch нужен mapping чтобы принять данные?
+```
+Маппинг нужен для описания типов полей в индексе
+```
 в) Что дает index-pattern?
+```
+Позволяет задавать паттерн индекса при обращении, например
+паттерн 'wiki*' - обращается ко всем индексам, начинающихся с wiki
+```
 
 ## 4. Создайте отчет "Топ10 национальных разделов" на базе индекса wikilang
 9. Kibana UI -> Visualize -> + -> Data Table -> выберите индекс wikilang
