@@ -127,7 +127,7 @@ nt","schema.ignore":"true","name":"elasticsearch-ksql-lang"},"tasks":[],"type":"
 ```
 
 7. Добавьте index-pattern - Kibana UI -> Management -> Index patterns -> Create Index Pattern -> Index name or pattern: wikilang -> кнопка Create
-[Скриншот создания]
+![create_index_wikilang](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/blob/master/python-hw/hw-11-confluent-elastic/images/create_index_wikilang.png)
 
 8. Используя полученные знания и документацию ответьте на вопросы:
 a) Опишите что делает каждая из этих операций?
@@ -138,7 +138,7 @@ a) Опишите что делает каждая из этих операци�
 9. Kibana UI -> Visualize -> + -> Data Table -> выберите индекс wikilang
 
 10. Select bucket type -> Split Rows, Aggregation -> Terms, Field -> CHANNEL.keyword, Size -> 10, нажмите кнопку Apply changes (выглядит как кнопка Play)
-[Скриншот создания]
+![channels_count_visualizing](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/blob/master/python-hw/hw-11-confluent-elastic/images/channels_count_visualizing.png)
 
 12. Что вы увидели в отчете?
 
