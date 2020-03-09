@@ -22,6 +22,15 @@ DATA=$( cat << EOF
                 "DIFFURL": {
                     "type": "text",
                     "index": "no"
+                },
+                "CHANNEL": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
                 }
             }
         }

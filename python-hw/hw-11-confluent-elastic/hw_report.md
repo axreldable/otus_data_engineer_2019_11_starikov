@@ -2,34 +2,90 @@
 
 ## 1. Создайте KSQL Stream WIKILANG
 
-1. Посмотрите какие топики есть сейчас в системе, и на основе того, в котором вы видите максимальный объем данных создайте stream по имени WIKILANG который фильтрует правки только в разделах национальных языков, кроме английского (поле channel вида #ru.wikipedia), который сделали не боты. Stream должен содержать следующие поля: createdat, channel, username, wikipage, diffurl
+1. Посмотрите какие топики есть сейчас в системе, и на основе того, 
+в котором вы видите максимальный объем данных создайте stream по имени WIKILANG 
+который фильтрует правки только в разделах национальных языков, 
+кроме английского (поле channel вида #ru.wikipedia), 
+который сделали не боты. Stream должен содержать следующие поля: createdat, channel, username, wikipage, diffurl
 ```sql
 CREATE STREAM WIKILANG
-  WITH (kafka_topic='WIKILANG_TOPIC') AS
+  WITH (kafka_topic='WIKILANG') AS
 SELECT createdat, channel, username, wikipage, diffurl FROM WIKIPEDIA
-WHERE WIKIPEDIA.channel = '#ru.wikipedia' AND WIKIPEDIA.ISBOT <> true;
+WHERE WIKIPEDIA.channel <> '#en.wikipedia' AND WIKIPEDIA.ISBOT <> true;
+```
+```sql
+CREATE STREAM WIKILANG
+  WITH (PARTITIONS=2,REPLICAS=2) AS
+SELECT createdat, channel, username, wikipage, diffurl FROM wikipedia
+WHERE channel <> '#en.wikipedia' AND isbot <> true;
+```
+```sql
+CREATE STREAM wikipedianobot WITH (PARTITIONS=2,REPLICAS=2) AS SELECT * FROM wikipedia WHERE isbot <> true;
+```
+```sql
+CREATE STREAM WIKILANG
+  WITH (kafka_topic='WIKILANG') AS
+SELECT * FROM WIKIPEDIA
+WHERE WIKIPEDIA.channel <> '#en.wikipedia' AND WIKIPEDIA.ISBOT <> true;
+```
+```sql
+CREATE STREAM WIKILANG
+  (createdat BIGINT,
+   channel VARCHAR,
+   username VARCHAR,
+   wikipage VARCHAR,
+   diffurl VARCHAR)
+  WITH (KAFKA_TOPIC='wikipedia.parsed',
+        VALUE_FORMAT='DELIMITED');
+```
+```sql
+CREATE STREAM WIKIPEDIANOBOT2 WITH (KAFKA_TOPIC='WIKIPEDIANOBOT2', PARTITIONS=2, REPLICAS=2) 
+AS SELECT *
+FROM WIKIPEDIA WIKIPEDIA
+WHERE (WIKIPEDIA.ISBOT <> true)
+EMIT CHANGES;
+```
+```sql
+CREATE STREAM WIKILANG WITH (KAFKA_TOPIC='WIKILANG_TOPIC', PARTITIONS=2, REPLICAS=2) AS SELECT
+  WIKIPEDIA.CREATEDAT "CREATEDAT",
+  WIKIPEDIA.CHANNEL "CHANNEL",
+  WIKIPEDIA.USERNAME "USERNAME",
+  WIKIPEDIA.WIKIPAGE "WIKIPAGE",
+  WIKIPEDIA.DIFFURL "DIFFURL"
+FROM WIKIPEDIA WIKIPEDIA
+WHERE ((WIKIPEDIA.CHANNEL = '#ru.wikipedia') AND (WIKIPEDIA.ISBOT <> true))
+EMIT CHANGES;
 ```
 
+CREATE STREAM pageviews
+  (viewtime BIGINT,
+   userid VARCHAR,
+   pageid VARCHAR)
+  WITH (KAFKA_TOPIC='pageviews',
+        VALUE_FORMAT='DELIMITED')
+  EMIT CHANGES;
+
 ## 2. Мониторинг WIKILANG
-2. После 1-2 минут работы откройте Confluent Control Center и сравните пропускную способность топиков WIKILANG и WIKIPEDIANOBOT, какие числа вы видите?
+2. После 1-2 минут работы откройте Confluent Control Center и сравните пропускную способность топиков 
+WIKILANG и WIKIPEDIANOBOT, какие числа вы видите?
 ```
  Topic name      | Bytes/sec produced | Bytes/sec consumed 
 -----------------------------------------------------------
- WIKILANG_TOPIC  | 91                 | 0   
- WIKIPEDIANOBOT  | 1179               | 1179   
+ WIKILANG        | 713                | 0   
+ WIKIPEDIANOBOT  | 1444               | 1444   
 -----------------------------------------------------------
 ```
 
 3. В KSQL CLI получите текущую статистику вашего стрима: describe extended WIKILANG;
 ```
-ksql> describe extended WIKILANG;
+ksql> describe extended wikilang;
 Name                 : WIKILANG
 Type                 : STREAM
 Key field            : 
 Key format           : STRING
 Timestamp field      : Not set - using <ROWTIME>
 Value format         : AVRO
-Kafka topic          : WIKILANG_TOPIC (partitions: 2, replication: 2)
+Kafka topic          : WIKILANG (partitions: 2, replication: 2)
  Field     | Type                      
 ---------------------------------------
  ROWTIME   | BIGINT           (system) 
@@ -42,24 +98,25 @@ Kafka topic          : WIKILANG_TOPIC (partitions: 2, replication: 2)
 ---------------------------------------
 Queries that write from this STREAM
 -----------------------------------
-CSAS_WIKILANG_7 : CREATE STREAM WIKILANG WITH (KAFKA_TOPIC='WIKILANG_TOPIC', PARTITIONS=2, REPLICAS=2) AS SELECT
+CSAS_WIKILANG_7 : CREATE STREAM WIKILANG WITH (KAFKA_TOPIC='WIKILANG', PARTITIONS=2, REPLICAS=2) AS SELECT
   WIKIPEDIA.CREATEDAT "CREATEDAT",
   WIKIPEDIA.CHANNEL "CHANNEL",
   WIKIPEDIA.USERNAME "USERNAME",
   WIKIPEDIA.WIKIPAGE "WIKIPAGE",
   WIKIPEDIA.DIFFURL "DIFFURL"
 FROM WIKIPEDIA WIKIPEDIA
-WHERE ((WIKIPEDIA.CHANNEL = '#ru.wikipedia') AND (WIKIPEDIA.ISBOT <> true))
+WHERE ((WIKIPEDIA.CHANNEL <> '#en.wikipedia') AND (WIKIPEDIA.ISBOT <> true))
 EMIT CHANGES;
 For query topology and execution plan please run: EXPLAIN <QueryId>
 Local runtime statistics
 ------------------------
-messages-per-sec:      0.28   total-messages:        50     last-message: 2020-03-01T11:44:00.24Z
+messages-per-sec:      3.03   total-messages:      1807     last-message: 2020-03-05T18:32:25.752Z
+(Statistics of the local KSQL server interaction with the Kafka topic WIKILANG)
 ```
 
 4. В KSQL CLI получите текущую статистику WIKIPEDIANOBOT: describe extended WIKIPEDIANOBOT;
 ```
-ksql> describe extended WIKIPEDIANOBOT;
+ksql> describe extended wikipedianobot;
 Name                 : WIKIPEDIANOBOT
 Type                 : STREAM
 Key field            : 
@@ -93,7 +150,7 @@ EMIT CHANGES;
 For query topology and execution plan please run: EXPLAIN <QueryId>
 Local runtime statistics
 ------------------------
-messages-per-sec:      4.23   total-messages:      2395     last-message: 2020-03-01T11:44:25.943Z
+messages-per-sec:      7.76   total-messages:      5354     last-message: 2020-03-05T18:33:27.337Z
 (Statistics of the local KSQL server interaction with the Kafka topic WIKIPEDIANOBOT)
 ```
 
