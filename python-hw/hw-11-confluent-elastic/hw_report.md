@@ -1,5 +1,25 @@
 # Отчет по ДЗ Elastic
 
+Подготовка:
+```
+1. Добавте channel preperty в set_elasticsearch_mapping_lang.sh
+"CHANNEL": {
+    "type": "text",
+    "fields": {
+        "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+        }
+    }
+}
+
+2. Добавте ssl конфигурацию в submit_elastic_sink_lang_config.sh
+"value.converter.schema.registry.ssl.truststore.location": "/etc/kafka/secrets/kafka.client.truststore.jks",
+"value.converter.schema.registry.ssl.truststore.password": "confluent",
+"value.converter.schema.registry.ssl.keystore.location": "/etc/kafka/secrets/kafka.client.keystore.jks",
+"value.converter.schema.registry.ssl.keystore.password": "confluent",
+```
+
 ## 1. Создайте KSQL Stream WIKILANG
 
 1. Посмотрите какие топики есть сейчас в системе, и на основе того, 
