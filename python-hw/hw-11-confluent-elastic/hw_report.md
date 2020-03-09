@@ -9,61 +9,10 @@
 который сделали не боты. Stream должен содержать следующие поля: createdat, channel, username, wikipage, diffurl
 ```sql
 CREATE STREAM WIKILANG
-  WITH (kafka_topic='WIKILANG') AS
-SELECT createdat, channel, username, wikipage, diffurl FROM WIKIPEDIA
-WHERE WIKIPEDIA.channel <> '#en.wikipedia' AND WIKIPEDIA.ISBOT <> true;
-```
-```sql
-CREATE STREAM WIKILANG
   WITH (PARTITIONS=2,REPLICAS=2) AS
 SELECT createdat, channel, username, wikipage, diffurl FROM wikipedia
 WHERE channel <> '#en.wikipedia' AND isbot <> true;
 ```
-```sql
-CREATE STREAM wikipedianobot WITH (PARTITIONS=2,REPLICAS=2) AS SELECT * FROM wikipedia WHERE isbot <> true;
-```
-```sql
-CREATE STREAM WIKILANG
-  WITH (kafka_topic='WIKILANG') AS
-SELECT * FROM WIKIPEDIA
-WHERE WIKIPEDIA.channel <> '#en.wikipedia' AND WIKIPEDIA.ISBOT <> true;
-```
-```sql
-CREATE STREAM WIKILANG
-  (createdat BIGINT,
-   channel VARCHAR,
-   username VARCHAR,
-   wikipage VARCHAR,
-   diffurl VARCHAR)
-  WITH (KAFKA_TOPIC='wikipedia.parsed',
-        VALUE_FORMAT='DELIMITED');
-```
-```sql
-CREATE STREAM WIKIPEDIANOBOT2 WITH (KAFKA_TOPIC='WIKIPEDIANOBOT2', PARTITIONS=2, REPLICAS=2) 
-AS SELECT *
-FROM WIKIPEDIA WIKIPEDIA
-WHERE (WIKIPEDIA.ISBOT <> true)
-EMIT CHANGES;
-```
-```sql
-CREATE STREAM WIKILANG WITH (KAFKA_TOPIC='WIKILANG_TOPIC', PARTITIONS=2, REPLICAS=2) AS SELECT
-  WIKIPEDIA.CREATEDAT "CREATEDAT",
-  WIKIPEDIA.CHANNEL "CHANNEL",
-  WIKIPEDIA.USERNAME "USERNAME",
-  WIKIPEDIA.WIKIPAGE "WIKIPAGE",
-  WIKIPEDIA.DIFFURL "DIFFURL"
-FROM WIKIPEDIA WIKIPEDIA
-WHERE ((WIKIPEDIA.CHANNEL = '#ru.wikipedia') AND (WIKIPEDIA.ISBOT <> true))
-EMIT CHANGES;
-```
-
-CREATE STREAM pageviews
-  (viewtime BIGINT,
-   userid VARCHAR,
-   pageid VARCHAR)
-  WITH (KAFKA_TOPIC='pageviews',
-        VALUE_FORMAT='DELIMITED')
-  EMIT CHANGES;
 
 ## 2. Мониторинг WIKILANG
 2. После 1-2 минут работы откройте Confluent Control Center и сравните пропускную способность топиков 
@@ -71,8 +20,8 @@ WIKILANG и WIKIPEDIANOBOT, какие числа вы видите?
 ```
  Topic name      | Bytes/sec produced | Bytes/sec consumed 
 -----------------------------------------------------------
- WIKILANG        | 713                | 0   
- WIKIPEDIANOBOT  | 1444               | 1444   
+ WIKILANG        | 619                | 619   
+ WIKIPEDIANOBOT  | 1199               | 1199   
 -----------------------------------------------------------
 ```
 
@@ -110,7 +59,7 @@ EMIT CHANGES;
 For query topology and execution plan please run: EXPLAIN <QueryId>
 Local runtime statistics
 ------------------------
-messages-per-sec:      3.03   total-messages:      1807     last-message: 2020-03-05T18:32:25.752Z
+messages-per-sec:      2.55   total-messages:      1151     last-message: 2020-03-09T13:20:14.073Z
 (Statistics of the local KSQL server interaction with the Kafka topic WIKILANG)
 ```
 
@@ -150,17 +99,15 @@ EMIT CHANGES;
 For query topology and execution plan please run: EXPLAIN <QueryId>
 Local runtime statistics
 ------------------------
-messages-per-sec:      7.76   total-messages:      5354     last-message: 2020-03-05T18:33:27.337Z
+messages-per-sec:      4.54   total-messages:      4411     last-message: 2020-03-09T13:21:02.86Z
 (Statistics of the local KSQL server interaction with the Kafka topic WIKIPEDIANOBOT)
 ```
 
 ## 3. Добавьте данные из стрима WIKILANG в ElasticSearch
 5. Добавьте mapping - запустите скрипт set_elasticsearch_mapping_lang.sh
 ```
-starikovaleksei1992@cdh-otus-hw-elastic:~/otus_data_engineer_2019_11_starikov/python-hw/hw-11-elastic-search$ sudo 
-./set_elasticsearch_mapping_lang.sh 
-./set_elasticsearch_mapping_lang.sh: line 59: warning: here-document at line 32 delimited by end-of-file (wanted `E
-OF')
+starikovaleksei1992@cdh-otus-hw-elastic:~/cp-demo$ sudo ./set_elasticsearch_mapping_lang.sh
+./set_elasticsearch_mapping_lang.sh: line 77: warning: here-document at line 41 delimited by end-of-file (wanted `EOF')
 {
   "acknowledged" : true,
   "shards_acknowledged" : true,
@@ -170,13 +117,13 @@ OF')
 
 6. Добавьте Kafka Connect - запустите submit_elastic_sink_lang_config.sh
 ```
-starikovaleksei1992@cdh-otus-hw-elastic:~/cp-demo$ sudo ./submit_elastic_sink_lang_config.sh 
-{"name":"elasticsearch-ksql-lang","config":{"connector.class":"io.confluent.connect.elasticsearch.ElasticsearchSink
-Connector","consumer.interceptor.classes":"io.confluent.monitoring.clients.interceptor.MonitoringConsumerIntercepto
-r","topics":"WIKILANG","topic.index.map":"WIKILANG:wikilang","connection.url":"http://elasticsearch:9200","type.nam
-e":"wikichange_short","key.ignore":"true","key.converter.schema.registry.url":"https://schemaregistry:8085","value.
-converter":"io.confluent.connect.avro.AvroConverter","value.converter.schema.registry.url":"https://schemaregistry:
-8085","schema.ignore":"true","name":"elasticsearch-ksql-lang"},"tasks":[],"type":"sink"}
+starikovaleksei1992@cdh-otus-hw-elastic:~/cp-demo$ sudo ./submit_elastic_sink_lang_config.sh
+{"name":"elasticsearch-ksql-lang","config":{"connector.class":"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector","consumer.interceptor.classes":"io.confluent.monitoring.cli
+ents.interceptor.MonitoringConsumerInterceptor","topics":"WIKILANG","topic.index.map":"WIKILANG:wikilang","connection.url":"http://elasticsearch:9200","type.name":"wikichange_short","ke
+y.ignore":"true","key.converter.schema.registry.url":"https://schemaregistry:8085","value.converter":"io.confluent.connect.avro.AvroConverter","value.converter.schema.registry.url":"htt
+ps://schemaregistry:8085","value.converter.schema.registry.ssl.truststore.location":"/etc/kafka/secrets/kafka.client.truststore.jks","value.converter.schema.registry.ssl.truststore.pass
+word":"confluent","value.converter.schema.registry.ssl.keystore.location":"/etc/kafka/secrets/kafka.client.keystore.jks","value.converter.schema.registry.ssl.keystore.password":"conflue
+nt","schema.ignore":"true","name":"elasticsearch-ksql-lang"},"tasks":[],"type":"sink"}
 ```
 
 7. Добавьте index-pattern - Kibana UI -> Management -> Index patterns -> Create Index Pattern -> Index name or pattern: wikilang -> кнопка Create
@@ -191,8 +138,7 @@ a) Опишите что делает каждая из этих операци�
 9. Kibana UI -> Visualize -> + -> Data Table -> выберите индекс wikilang
 
 10. Select bucket type -> Split Rows, Aggregation -> Terms, Field -> CHANNEL.keyword, Size -> 10, нажмите кнопку Apply changes (выглядит как кнопка Play)
-
-11. Сохраните визуализацию под удобным для вас именем
+[Скриншот создания]
 
 12. Что вы увидели в отчете?
 
