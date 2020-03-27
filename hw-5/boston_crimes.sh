@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SPATH=$(dirname $0)
-export SPARK_SUBMIT=/usr/local/Cellar/apache-spark/2.4.0/libexec/bin/spark-submit
+export SPARK_SUBMIT=/usr/local/Cellar/apache-spark/2.4.5/libexec/bin/spark-submit
 
 PROJECT_NAME=hw-5
 VERSION=1.0.0
