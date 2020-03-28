@@ -1,0 +1,27 @@
+version: '3'
+services:
+  generator:
+    depends_on:
+      - kafka
+    build:
+      context: ./generator
+    networks:
+      - wikiflow-network
+  reader:
+    depends_on:
+      - kafka
+    build:
+      context: ./reader
+    networks:
+      - wikiflow-network
+  kafka:
+    image: spotify/kafka
+    networks:
+      - wikiflow-network
+networks:
+  wikiflow-network:
+    external:
+      name: wikiflow-network
+
+volumes:
+  delta:
