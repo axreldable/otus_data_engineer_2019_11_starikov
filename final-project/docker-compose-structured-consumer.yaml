@@ -1,0 +1,17 @@
+version: "3"
+services:
+  analytics-consumer:
+    build:
+      context: ./consumer
+    networks:
+      - wikiflow-network
+    ports:
+      - "4040:4040"
+    volumes:
+      - delta:/storage
+networks:
+  wikiflow-network:
+    external:
+      name: wikiflow-network
+volumes:
+  delta:

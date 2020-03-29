@@ -10,7 +10,8 @@ lazy val global = project
   .aggregate(
     input_adapter,
     generator,
-    reader
+    reader,
+    consumer
   )
 
 lazy val input_adapter = project
@@ -50,6 +51,23 @@ lazy val reader = project
     libraryDependencies ++= Seq(
       Dependencies.sparkCore % Provided,
       Dependencies.sparkSql % Provided,
+      Dependencies.kafkaClients,
+      Dependencies.logback,
+      Dependencies.typesafeLogging,
+    )
+  )
+
+lazy val consumer = project
+  .in(file("consumer"))
+  .settings(
+    name := "consumer",
+    version := "1.0.0",
+    assemblySettings,
+    libraryDependencies ++= Seq(
+      Dependencies.sparkCore % Provided,
+      Dependencies.sparkSql % Provided,
+      Dependencies.sparkStreaming % Provided,
+      Dependencies.sparkStreamingKafka % Provided,
       Dependencies.kafkaClients,
       Dependencies.logback,
       Dependencies.typesafeLogging,
