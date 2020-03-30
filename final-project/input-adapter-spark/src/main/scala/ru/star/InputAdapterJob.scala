@@ -9,7 +9,7 @@ import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010._
 
 
-object StructuredConsumer extends App with StrictLogging {
+object InputAdapterJob extends App with StrictLogging {
   val appName: String = "structured-consumer-example"
 
   val spark: SparkSession = SparkSession.builder()
@@ -40,13 +40,35 @@ object StructuredConsumer extends App with StrictLogging {
 //    logger.info(s"Key: ${record.key().toString}, Value: ${record.value().toString}")
 //  })
 //  stream.print()
-  stream.foreachRDD { rdd =>
-    rdd.foreach { record =>
-      val value = record.value()
-      println(s"Message: $value")
-    }
-  }
+//  stream.foreachRDD { rdd =>
+//    rdd.foreach { record =>
+//      val value = record.value()
+//      println(s"Message: $value")
+//    }
+//  }
 
-  streamingContext.start()
-  streamingContext.awaitTermination()
+  //  streamingContext.start()
+  //  streamingContext.awaitTermination()
+
+  val df = spark
+    .read
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "kafka:9092")
+    .option("subscribe", "tweet-topic-1")
+    .load()
+//  df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+//    .as[(String, String)].rdd.foreach({ record =>
+//    val key = record._1
+//    val value = record._2
+//    println(s"Message: $key, $value")
+//  })
+
+  df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+    .write
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "kafka:9092")
+    .option("topic", "tweet-topic-2")
+    .save()
+
+  spark.streams.awaitAnyTermination()
 }

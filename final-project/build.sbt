@@ -11,7 +11,7 @@ lazy val global = project
     input_adapter,
     generator,
     reader,
-    consumer
+    input_adapter_spark
   )
 
 lazy val input_adapter = project
@@ -57,10 +57,10 @@ lazy val reader = project
     )
   )
 
-lazy val consumer = project
-  .in(file("consumer"))
+lazy val input_adapter_spark = project
+  .in(file("input-adapter-spark"))
   .settings(
-    name := "consumer",
+    name := "input-adapter-spark",
     version := "1.0.0",
     assemblySettings,
     libraryDependencies ++= Seq(

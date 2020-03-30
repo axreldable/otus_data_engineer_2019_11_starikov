@@ -18,6 +18,9 @@ services:
     image: spotify/kafka
     networks:
       - wikiflow-network
+    ports:
+      - "9092:9092"
+      - "2181:2181"
 networks:
   wikiflow-network:
     external:
