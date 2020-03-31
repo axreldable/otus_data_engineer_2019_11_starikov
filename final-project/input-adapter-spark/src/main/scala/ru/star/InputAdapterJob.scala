@@ -21,7 +21,7 @@ object InputAdapterJob extends App with StrictLogging {
   val streamingContext = new StreamingContext(spark.sparkContext, Seconds(5))
 
   val kafkaParams = Map[String, Object](
-    "bootstrap.servers" -> "kafka:9092",
+    "bootstrap.servers" -> "kafka:9093",
     "key.deserializer" -> classOf[StringDeserializer],
     "value.deserializer" -> classOf[StringDeserializer],
     "group.id" -> "use_a_separate_group_id_for_each_stream",
@@ -53,7 +53,7 @@ object InputAdapterJob extends App with StrictLogging {
   val df = spark
     .read
     .format("kafka")
-    .option("kafka.bootstrap.servers", "kafka:9092")
+    .option("kafka.bootstrap.servers", "kafka:9093")
     .option("subscribe", "tweet-topic-1")
     .load()
 //  df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
@@ -66,7 +66,7 @@ object InputAdapterJob extends App with StrictLogging {
   df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
     .write
     .format("kafka")
-    .option("kafka.bootstrap.servers", "kafka:9092")
+    .option("kafka.bootstrap.servers", "kafka:9093")
     .option("topic", "tweet-topic-2")
     .save()
 

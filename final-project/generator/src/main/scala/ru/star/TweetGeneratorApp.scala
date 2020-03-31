@@ -13,7 +13,7 @@ object TweetGeneratorApp extends App with StrictLogging {
 
   val props = new Properties()
 
-  props.put("bootstrap.servers", "kafka:9092")
+  props.put("bootstrap.servers", "kafka:9093")
   props.put("client.id", "producer")
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")

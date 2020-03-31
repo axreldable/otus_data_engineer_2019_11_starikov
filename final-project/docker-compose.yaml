@@ -3,9 +3,87 @@ services:
   generator:
     build:
       context: ./generator
+    depends_on:
+      - kafka
   reader:
     build:
       context: ./reader
+    depends_on:
+      - kafka
+  analytics-consumer:
+    build:
+      context: ./input-adapter-spark
+    depends_on:
+      - kafka
+    ports:
+      - "4040:4040"
+    volumes:
+      - delta:/storage
+
+  zookeeper:
+    build: ./kafka-prometheus-monitoring/zookeeper
+    command:
+      - "start-foreground"
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    links:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    expose:
+      - "9093"
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      - KAFKA_LISTENERS=INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INSIDE
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_CREATE_TOPICS=customer:1:1,audit:1:1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - JMX_PORT=9999
+
+  kafka-jmx-exporter:
+    build: ./kafka-prometheus-monitoring/prometheus-jmx-exporter
+    ports:
+      - "8080:8080"
+    links:
+      - kafka
+    environment:
+      - JMX_PORT=9999
+      - JMX_HOST=kafka
+      - HTTP_PORT=8080
+      - JMX_EXPORTER_CONFIG_FILE=kafka.yml
+
+  prometheus:
+    ports:
+      - 9090:9090/tcp
+    image: prom/prometheus:0.18.0
+    volumes:
+      - ./kafka-prometheus-monitoring/mount/prometheus:/etc/prometheus
+    links:
+      - kafka-jmx-exporter
+
+  grafana:
+    image: grafana/grafana:3.0.1
+    ports:
+      - 3000:3000/tcp
+    links:
+      - prometheus
+    volumes:
+      - "graf-db:/var/lib/grafana"
+
+  graf-db:
+    command:
+      - cat
+    image: infinityworks/graf-db:08
+    links:
+      - prometheus
+    volumes:
+      - "graf-db:/var/lib/grafana/"
 
 volumes:
+  graf-db:
   delta:

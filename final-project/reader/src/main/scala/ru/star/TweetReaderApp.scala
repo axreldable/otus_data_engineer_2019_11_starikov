@@ -11,7 +11,7 @@ object TweetReaderApp extends App with StrictLogging {
 
   val props = new Properties()
 
-  props.put("bootstrap.servers", "kafka:9092")
+  props.put("bootstrap.servers", "kafka:9093")
   props.put("client.id", "producer")
   props.put("group.id", "producer")
   props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
