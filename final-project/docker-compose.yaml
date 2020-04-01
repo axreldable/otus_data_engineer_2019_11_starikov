@@ -5,20 +5,29 @@ services:
       context: ./generator
     depends_on:
       - kafka
-#  reader:
-#    build:
-#      context: ./reader
-#    depends_on:
-#      - kafka
-#  analytics-consumer:
-#    build:
-#      context: ./input-adapter-spark
-#    depends_on:
-#      - kafka
-#    ports:
-#      - "4040:4040"
-#    volumes:
-#      - delta:/storage
+
+  jobmanager:
+    image: flink:1.10.0-scala_2.12
+    expose:
+      - "6123"
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+
+  taskmanager:
+    image: flink:1.10.0-scala_2.12
+    expose:
+      - "6121"
+      - "6122"
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    links:
+      - "jobmanager:jobmanager"
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
 
   zookeeper:
     build: ./kafka-prometheus-monitoring/zookeeper
@@ -41,7 +50,6 @@ services:
       - KAFKA_LISTENERS=INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       - KAFKA_INTER_BROKER_LISTENER_NAME=INSIDE
       - KAFKA_ADVERTISED_PORT=9092
-      - KAFKA_CREATE_TOPICS=customer:1:1,audit:1:1
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - JMX_PORT=9999
 

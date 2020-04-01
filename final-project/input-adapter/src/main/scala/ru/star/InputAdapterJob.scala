@@ -15,7 +15,7 @@ object InputAdapterJob extends App {
   println("params", params)
 
   val kafkaConsumerProperties = new Properties()
-  kafkaConsumerProperties.put("bootstrap.servers", "localhost:9092")
+  kafkaConsumerProperties.put("bootstrap.servers", "kafka:9093")
   println("kafkaConsumerProperties", kafkaConsumerProperties)
 
   val eventConsumer = new FlinkKafkaConsumer[String](
@@ -33,5 +33,5 @@ object InputAdapterJob extends App {
       message
     }).addSink(eventProducer)
 
-  env.execute()
+  env.execute("input-adapter")
 }
