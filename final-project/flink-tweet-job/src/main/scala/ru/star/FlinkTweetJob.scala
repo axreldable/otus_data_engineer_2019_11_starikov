@@ -6,13 +6,10 @@ import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 
-object InputAdapterJob extends App {
-  println("input-adapter started.")
+object FlinkTweetJob extends App {
+  println("flink-tweet-job started.")
 
   val env = StreamExecutionEnvironment.getExecutionEnvironment
-
-  val params: Parameters = Parameters(args)
-  println("params", params)
 
   val kafkaConsumerProperties = new Properties()
   kafkaConsumerProperties.put("bootstrap.servers", "localhost:9092")
@@ -29,7 +26,7 @@ object InputAdapterJob extends App {
   env
     .addSource(eventConsumer)
     .map(message => {
-      println(s"Precessing '$message' in input-adapter.")
+      println(s"Precessing '$message' in flink-tweet-job.")
       message
     }).addSink(eventProducer)
 

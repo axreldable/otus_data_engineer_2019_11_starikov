@@ -32,7 +32,7 @@ object TweetGeneratorApp extends App with StrictLogging {
     Thread.sleep(1000)
     msgCounter += 1
 
-    val data = new ProducerRecord[String, String]("tweet-topic-1", line)
+    val data = new ProducerRecord[String, String]("input-adapter-in", line)
 
     producer.send(data)
 

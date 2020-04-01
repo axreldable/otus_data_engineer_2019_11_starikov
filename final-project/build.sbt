@@ -11,13 +11,41 @@ lazy val global = project
     input_adapter,
     generator,
     reader,
-    input_adapter_spark
+    input_adapter_spark,
+    flink_tweet_job,
+    output_adapter
   )
 
 lazy val input_adapter = project
   .in(file("input-adapter"))
   .settings(
     name := "input-adapter",
+    version := "1.0.0",
+    assemblySettings,
+    libraryDependencies ++= Seq(
+      Dependencies.flinkCore,
+      Dependencies.flinkStreaming,
+      Dependencies.flinkConnectorKafka,
+    )
+  )
+
+lazy val flink_tweet_job = project
+  .in(file("flink-tweet-job"))
+  .settings(
+    name := "flink-tweet-job",
+    version := "1.0.0",
+    assemblySettings,
+    libraryDependencies ++= Seq(
+      Dependencies.flinkCore,
+      Dependencies.flinkStreaming,
+      Dependencies.flinkConnectorKafka,
+    )
+  )
+
+lazy val output_adapter = project
+  .in(file("output-adapter"))
+  .settings(
+    name := "output-adapter",
     version := "1.0.0",
     assemblySettings,
     libraryDependencies ++= Seq(

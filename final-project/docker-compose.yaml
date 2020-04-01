@@ -5,20 +5,20 @@ services:
       context: ./generator
     depends_on:
       - kafka
-  reader:
-    build:
-      context: ./reader
-    depends_on:
-      - kafka
-  analytics-consumer:
-    build:
-      context: ./input-adapter-spark
-    depends_on:
-      - kafka
-    ports:
-      - "4040:4040"
-    volumes:
-      - delta:/storage
+#  reader:
+#    build:
+#      context: ./reader
+#    depends_on:
+#      - kafka
+#  analytics-consumer:
+#    build:
+#      context: ./input-adapter-spark
+#    depends_on:
+#      - kafka
+#    ports:
+#      - "4040:4040"
+#    volumes:
+#      - delta:/storage
 
   zookeeper:
     build: ./kafka-prometheus-monitoring/zookeeper
