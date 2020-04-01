@@ -7,12 +7,3 @@ run-tweet-generation:
 	docker-compose down && \
 	docker-compose up --remove-orphans -d && \
 	./deploy_jobs.sh
-
-run-flink:
-	docker-compose -f docker-compose-flink.yaml down && \
-	docker-compose -f docker-compose-flink.yaml up --remove-orphans -d && \
-    ./deploy_jobs.sh
-
-run-structured-consumer:
-	docker-compose -f docker-compose-structured-consumer.yaml build
-	docker-compose -f docker-compose-structured-consumer.yaml up
