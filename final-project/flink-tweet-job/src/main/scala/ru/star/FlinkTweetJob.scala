@@ -16,11 +16,11 @@ object FlinkTweetJob extends App {
   println("kafkaConsumerProperties", kafkaConsumerProperties)
 
   val eventConsumer = new FlinkKafkaConsumer[String](
-    "input-adapter-in", new SimpleStringSchema(), kafkaConsumerProperties
+    "input-adapter-out", new SimpleStringSchema(), kafkaConsumerProperties
   )
 
   val eventProducer = new FlinkKafkaProducer[String](
-    "input-adapter-out", new SimpleStringSchema(), kafkaConsumerProperties
+    "output-adapter-in", new SimpleStringSchema(), kafkaConsumerProperties
   )
 
   env
