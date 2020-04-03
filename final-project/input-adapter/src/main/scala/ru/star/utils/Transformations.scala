@@ -1,4 +1,4 @@
-package ru.star.process
+package ru.star.utils
 
 object Transformations {
   def getByName(name: String): String => String = {

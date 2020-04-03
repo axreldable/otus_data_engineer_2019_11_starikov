@@ -12,11 +12,11 @@ final case class InputKafka(bootstrapServers: String)
 final case class OutputKafka(bootstrapServers: String)
 
 final case class InputAdapterParameters(inputKafka: InputKafka, outputKafka: OutputKafka,
-                                        eventConfigPath: String)
+                                        eventConfigName: String)
 
 final case class InputAdapterParams(kafkaConsumerProperties: Properties,
                                     kafkaProducerProperties: Properties,
-                                    eventConfigPath: String)
+                                    eventConfigName: String)
 
 object InputAdapterParams {
   def apply(inputArgs: Array[String]): InputAdapterParams = {
@@ -28,6 +28,6 @@ object InputAdapterParams {
     val kafkaProducerProperties = new Properties()
     kafkaProducerProperties.put("bootstrap.servers", config.outputKafka.bootstrapServers)
 
-    InputAdapterParams(kafkaConsumerProperties, kafkaProducerProperties, config.eventConfigPath)
+    InputAdapterParams(kafkaConsumerProperties, kafkaProducerProperties, config.eventConfigName)
   }
 }

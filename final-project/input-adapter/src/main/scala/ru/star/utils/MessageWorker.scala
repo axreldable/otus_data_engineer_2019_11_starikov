@@ -1,4 +1,4 @@
-package ru.star.process
+package ru.star.utils
 
 import com.typesafe.scalalogging.LazyLogging
 import ru.star.models.{ConfiguredMessage, InputAdapterConfig, InternalEvent}
