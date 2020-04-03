@@ -1,21 +1,24 @@
-package ru.star
+package ru.star.process
 
 import com.typesafe.scalalogging.LazyLogging
+import ru.star.models.{ConfiguredMessage, InputAdapterConfig, InternalEvent}
 
 object MessageWorker extends LazyLogging {
-  def mapWithConfig(inMessage: String, inputAdapterConfig: InputAdapterConfig): (String, EventConfig) = {
+  def mapWithConfig(inMessage: String, inputAdapterConfig: InputAdapterConfig): ConfiguredMessage = {
     val (messageType, message) = spitTypeMessage(inMessage)
-    (message, inputAdapterConfig.getEventConfig(messageType))
+    ConfiguredMessage(message, inputAdapterConfig.getEventConfig(messageType))
   }
 
-  def internalEventFrom(message: String, eventConfig: EventConfig): InternalEvent = {
-    val transformedMessage = transformMessage(message, eventConfig.transformFunction)
+  def internalEventFrom(configuredMessage: ConfiguredMessage): InternalEvent = {
+    val eventConfig = configuredMessage.config
+    val transformedMessage = transformMessage(configuredMessage.message, eventConfig.transformFunction)
 
     InternalEvent(transformedMessage, eventConfig.targetTopic)
   }
 
-  def stringMessageFrom(message: String, eventConfig: EventConfig): String = {
-    val transformedMessage = transformMessage(message, eventConfig.transformFunction)
+  def stringMessageFrom(configuredMessage: ConfiguredMessage): String = {
+    val eventConfig = configuredMessage.config
+    val transformedMessage = transformMessage(configuredMessage.message, eventConfig.transformFunction)
 
     Array(eventConfig.targetTopic, transformedMessage).mkString(",")
   }

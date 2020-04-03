@@ -4,11 +4,12 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.configuration.Configuration
 import pureconfig.ConfigSource
-import ru.star.{EventConfig, InputAdapterConfig, MessageWorker}
+import ru.star.models.{ConfiguredMessage, InputAdapterConfig}
+import ru.star.process.MessageWorker
 //import pureconfig.generic.auto._
 import pureconfig.generic.auto._
 
-class EventConfigMapper extends RichMapFunction[String, (String, EventConfig)] with LazyLogging {
+class MessageConfigMapper extends RichMapFunction[String, ConfiguredMessage] with LazyLogging {
 
   private var inputAdapterConfig: InputAdapterConfig = _
 
@@ -19,7 +20,7 @@ class EventConfigMapper extends RichMapFunction[String, (String, EventConfig)] w
     inputAdapterConfig = ConfigSource.file(confFile).loadOrThrow[InputAdapterConfig]
   }
 
-  override def map(message: String): (String, EventConfig) = {
+  override def map(message: String): ConfiguredMessage = {
     MessageWorker.mapWithConfig(message, inputAdapterConfig)
   }
 }

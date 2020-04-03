@@ -3,7 +3,9 @@ package ru.star
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
-import ru.star.map.EventConfigMapper
+import ru.star.map.MessageConfigMapper
+import ru.star.models.{ConfiguredMessage, InternalEvent}
+import ru.star.process.MessageWorker
 
 final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
                                      eventConfigPath: String,
@@ -17,24 +19,16 @@ final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
     val source = env.fromCollection(List("type-1,1", "type-2,2", "type-3,3", "type-4,four", "default,5", "6"))
 
     //    val events = env.addSource(messageSource)
-    val configuredMessages: DataStream[(String, EventConfig)] = source
-      .map(new EventConfigMapper())
+    val configuredMessages: DataStream[ConfiguredMessage] = source
+      .map(new MessageConfigMapper())
 
     val internalEvens: DataStream[InternalEvent] = configuredMessages
-      .filter(configuredMessage => configuredMessage match {
-        case (_, config: EventConfig) => config.form.equals("internal-event")
-      })
-      .map(configuredMessage => configuredMessage match {
-        case (message: String, config: EventConfig) => MessageWorker.internalEventFrom(message, config)
-      })
+      .filter(_.config.form.equals("internal-event"))
+      .map(MessageWorker.internalEventFrom(_))
 
     val stringMessages: DataStream[String] = configuredMessages
-      .filter(configuredMessage => configuredMessage match {
-        case (_, config: EventConfig) => config.form.equals("string")
-      })
-      .map(configuredMessage => configuredMessage match {
-        case (message: String, config: EventConfig) => MessageWorker.stringMessageFrom(message, config)
-      })
+      .filter(_.config.form.equals("string"))
+      .map(MessageWorker.stringMessageFrom(_))
 
     internalEvens.map(println(_))
     stringMessages.map(println(_))

@@ -1,4 +1,4 @@
-package ru.star
+package ru.star.process
 
 object Transformations {
   def getByName(name: String): String => String = {
@@ -9,11 +9,11 @@ object Transformations {
     }
   }
 
-  def asIs(message: String): String = {
+  private def asIs(message: String): String = {
     message
   }
 
-  def firstLetter(message: String): String = {
+  private def firstLetter(message: String): String = {
     message.headOption.getOrElse("").toString
   }
 }

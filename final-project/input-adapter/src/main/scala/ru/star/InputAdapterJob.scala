@@ -5,6 +5,8 @@ import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.KeyedSerializationSchema
+import ru.star.models.InternalEvent
+import ru.star.process.MessageWorker
 
 object InputAdapterJob extends App with LazyLogging {
   println("input-adapter started.")

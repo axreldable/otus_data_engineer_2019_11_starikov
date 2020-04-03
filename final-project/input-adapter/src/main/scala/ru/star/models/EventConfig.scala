@@ -1,4 +1,4 @@
-package ru.star
+package ru.star.models
 
 import com.typesafe.scalalogging.LazyLogging
 
