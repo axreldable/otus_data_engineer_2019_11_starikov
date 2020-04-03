@@ -18,7 +18,7 @@ final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
 
     //    val events = env.addSource(messageSource)
     val events = source
-      .map(new InternalEventMapper())
+      .map(new EventConfigMapper())
       .map(println(_))
 
 //      events

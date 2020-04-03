@@ -7,18 +7,18 @@ import pureconfig.ConfigSource
 //import pureconfig.generic.auto._
 import pureconfig.generic.auto._
 
-class InternalEventMapper extends RichMapFunction[String, InternalEvent] with LazyLogging {
+class EventConfigMapper extends RichMapFunction[String, (String, EventConfig)] with LazyLogging {
 
-  private var eventConf: EventConfig = _
+  private var inputAdapterConfig: InputAdapterConfig = _
 
   override def open(config: Configuration): Unit = {
     super.open(config)
 
     val confFile = getRuntimeContext.getDistributedCache.getFile("event.conf")
-    eventConf = ConfigSource.file(confFile).loadOrThrow[EventConfig]
+    inputAdapterConfig = ConfigSource.file(confFile).loadOrThrow[InputAdapterConfig]
   }
 
-  override def map(message: String): InternalEvent = {
-    MessageWorker.internalEventFrom(message, eventConf)
+  override def map(message: String): (String, EventConfig) = {
+    MessageWorker.mapWithConfig(message, inputAdapterConfig)
   }
 }
