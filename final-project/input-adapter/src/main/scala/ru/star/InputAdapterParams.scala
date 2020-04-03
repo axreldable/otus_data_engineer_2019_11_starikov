@@ -2,34 +2,46 @@ package ru.star
 
 import java.util.Properties
 
-final case class Parameters(kafkaConsumerProperties: Properties)
+import com.typesafe.scalalogging.LazyLogging
+import pureconfig._
+//import pureconfig.generic.auto._
+import pureconfig.generic.auto._
 
-object Parameters {
-  def apply(params: InputAdapterParams): Parameters = {
-    val kafkaConsumerProperties = new Properties()
-    kafkaConsumerProperties.put("bootstrap.servers", Config.getValue(params.inputBootstrapServers, "InputKafka"))
+final case class InputKafka(bootstrapServers: String)
 
+final case class OutputKafka(bootstrapServers: String)
 
-    new Parameters(kafkaConsumerProperties)
+final case class TypeTransformation(targetTopic: String, transformFunction: String) extends Serializable
+
+final case class EventConfig(transformConfig: Map[String, TypeTransformation], stringTypes: List[String],
+                             internalEventTypes: List[String]) extends Serializable with LazyLogging {
+  def targetTopicFromType(messageType: String): String = {
+    this.transformConfig.get(messageType) match {
+      case Some(typeTransformation) => typeTransformation.targetTopic
+      case _ =>
+        logger.error(s"Failed to find messageType=$messageType in config! Will use input-adapter-error.")
+        "input-adapter-error"
+    }
   }
-
-  def apply(inputArgs: Array[String]): Parameters = apply(InputAdapterParams(inputArgs))
 }
 
-final case class InputAdapterParams(inputBootstrapServers: Option[String] = None)
+final case class InputAdapterParameters(inputKafka: InputKafka, outputKafka: OutputKafka,
+                                        eventConfig: EventConfig)
+
+final case class InputAdapterParams(kafkaConsumerProperties: Properties,
+                                    kafkaProducerProperties: Properties,
+                                    eventConfig: EventConfig)
 
 object InputAdapterParams {
-  private lazy val parser = new scopt.OptionParser[InputAdapterParams]("input-adapter-params") {
+  def apply(inputArgs: Array[String]): InputAdapterParams = {
+    val config = ConfigSource.default.loadOrThrow[InputAdapterParameters]
 
-    opt[String]("input-bootstrap-servers") action {
-      (v, c) => c copy (inputBootstrapServers = Some(v))
-    } text "input-bootstrap-servers"
+    val kafkaConsumerProperties = new Properties()
+    kafkaConsumerProperties.put("bootstrap.servers", config.inputKafka.bootstrapServers)
+
+    val kafkaProducerProperties = new Properties()
+    kafkaProducerProperties.put("bootstrap.servers", config.outputKafka.bootstrapServers)
+
+    InputAdapterParams(kafkaConsumerProperties, kafkaProducerProperties, config.eventConfig)
   }
-
-  def apply(inputArgs: Array[String]): InputAdapterParams = parser
-    .parse(inputArgs, InputAdapterParams())
-    .getOrElse {
-      throw new Exception(s"Failed to parse application arguments: ${inputArgs.mkString(",")}.")
-    }
 }
-

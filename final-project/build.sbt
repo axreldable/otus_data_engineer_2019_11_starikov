@@ -23,9 +23,11 @@ lazy val input_adapter = project
     version := "1.0.0",
     assemblySettings,
     libraryDependencies ++= Seq(
+      Dependencies.pureConfig,
       Dependencies.flinkCore,
       Dependencies.flinkStreaming,
       Dependencies.flinkConnectorKafka,
+      Dependencies.typesafeLogging
     )
   )
 

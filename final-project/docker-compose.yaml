@@ -6,28 +6,28 @@ services:
     depends_on:
       - kafka
 
-  jobmanager:
-    image: flink:1.10.0-scala_2.12
-    expose:
-      - "6123"
-    ports:
-      - "8081:8081"
-    command: jobmanager
-    environment:
-      - JOB_MANAGER_RPC_ADDRESS=jobmanager
-
-  taskmanager:
-    image: flink:1.10.0-scala_2.12
-    expose:
-      - "6121"
-      - "6122"
-    depends_on:
-      - jobmanager
-    command: taskmanager
-    links:
-      - "jobmanager:jobmanager"
-    environment:
-      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+#  jobmanager:
+#    image: flink:1.10.0-scala_2.12
+#    expose:
+#      - "6123"
+#    ports:
+#      - "8081:8081"
+#    command: jobmanager
+#    environment:
+#      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+#
+#  taskmanager:
+#    image: flink:1.10.0-scala_2.12
+#    expose:
+#      - "6121"
+#      - "6122"
+#    depends_on:
+#      - jobmanager
+#    command: taskmanager
+#    links:
+#      - "jobmanager:jobmanager"
+#    environment:
+#      - JOB_MANAGER_RPC_ADDRESS=jobmanager
 
   zookeeper:
     build: ./kafka-prometheus-monitoring/zookeeper
@@ -65,32 +65,32 @@ services:
       - HTTP_PORT=8080
       - JMX_EXPORTER_CONFIG_FILE=kafka.yml
 
-  prometheus:
-    ports:
-      - 9090:9090/tcp
-    image: prom/prometheus:0.18.0
-    volumes:
-      - ./kafka-prometheus-monitoring/mount/prometheus:/etc/prometheus
-    links:
-      - kafka-jmx-exporter
-
-  grafana:
-    image: grafana/grafana:3.0.1
-    ports:
-      - 3000:3000/tcp
-    links:
-      - prometheus
-    volumes:
-      - "graf-db:/var/lib/grafana"
-
-  graf-db:
-    command:
-      - cat
-    image: infinityworks/graf-db:08
-    links:
-      - prometheus
-    volumes:
-      - "graf-db:/var/lib/grafana/"
+#  prometheus:
+#    ports:
+#      - 9090:9090/tcp
+#    image: prom/prometheus:0.18.0
+#    volumes:
+#      - ./kafka-prometheus-monitoring/mount/prometheus:/etc/prometheus
+#    links:
+#      - kafka-jmx-exporter
+#
+#  grafana:
+#    image: grafana/grafana:3.0.1
+#    ports:
+#      - 3000:3000/tcp
+#    links:
+#      - prometheus
+#    volumes:
+#      - "graf-db:/var/lib/grafana"
+#
+#  graf-db:
+#    command:
+#      - cat
+#    image: infinityworks/graf-db:08
+#    links:
+#      - prometheus
+#    volumes:
+#      - "graf-db:/var/lib/grafana/"
 
 volumes:
   graf-db:

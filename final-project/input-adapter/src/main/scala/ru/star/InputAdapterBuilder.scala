@@ -1,31 +1,40 @@
 package ru.star
 
-import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
+import ru.star.InputAdapterJob.env
+import ru.star.InternalEvent.getType
 
 final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
-                                     eventSource: SourceFunction[String],
-                                     eventSink: SinkFunction[String]
+                                     eventConfig: EventConfig,
+                                     messageSource: SourceFunction[String],
+                                     eventSink: SinkFunction[InternalEvent],
+                                     stringSink: SinkFunction[String]
                                     ) {
   def build(): Unit = {
-    processMessage(eventSource, eventSink, processString)
-  }
+    env.registerCachedFile("file:///path/to/exec/file", "localExecFile", true)
 
-  def processString(in: String): String = {
-    in
-  }
+    val source = env.fromCollection(List("type-1,1", "type-2,2", "type-3,3", "default,4", "5"))
 
-  def processMessage[IN: TypeInformation, OUT: TypeInformation](source: SourceFunction[IN],
-                                                                sink: SinkFunction[OUT],
-                                                                f: IN => OUT): Unit = {
-    env
-      .addSource(source)
+//    val events = env.addSource(messageSource)
+    val events = source
       .map(message => {
-        println(s"Precessing '$message' in input-adapter.")
-        f(message)
+        val messageType = getType(message)
+        val topic = eventConfig.targetTopicFromType(messageType)
+        InternalEvent.from(message, topic)
       })
-      .addSink(sink)
+      .map(message => message)
+
+//    events
+//      .filter(event => eventConfig.internalEventTypes contains event.messageType)
+//      .addSink(eventSink)
+//    events
+//      .addSink(stringSink)
+
+//    events
+//      .filter(event => eventConfig.stringTypes contains event.messageType)
+//      .map(event => Array(event.targetTopic, event.message).mkString(","))
+//      .addSink(stringSink)
   }
 }
