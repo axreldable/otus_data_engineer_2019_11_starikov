@@ -11,7 +11,7 @@ import ru.star.utils.MessageWorker
 object InputAdapterJob extends App with LazyLogging {
   println("input-adapter started.")
 
-  val env = StreamExecutionEnvironment.createLocalEnvironment()
+  val env = StreamExecutionEnvironment.getExecutionEnvironment
 
   val params = InputAdapterParams(args)
   println("params", params)
@@ -50,7 +50,7 @@ object InputAdapterJob extends App with LazyLogging {
 
   InputAdapterBuilder(
     env = env,
-    eventConfigName = params.eventConfigName,
+    eventConfigPath = params.eventConfigPath,
     messageSource = messageConsumer,
     configSource = configConsumer,
     eventSink = eventProducer,

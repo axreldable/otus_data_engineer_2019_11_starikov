@@ -1,11 +1,13 @@
 create-network:
 	docker network create ml-stream-engine-network
 
-run-tweet-generation:
+run-infrustructure:
 	sbt clean && \
 	sbt assembly && \
 	docker-compose down && \
-	docker-compose up --remove-orphans -d && \
+	docker-compose up --remove-orphans -d
+
+run-deploy-flink-jobs:
 	./deploy_jobs.sh
 
 run-flink:

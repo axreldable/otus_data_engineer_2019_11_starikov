@@ -1,6 +1,5 @@
 package ru.star
 
-import org.apache.flink.api.java.tuple.Tuple
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
@@ -9,17 +8,17 @@ import ru.star.models.{ConfiguredMessage, InternalEvent}
 import ru.star.utils.{Helpers, MessageWorker}
 
 final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
-                                     eventConfigName: String,
+                                     eventConfigPath: String,
                                      messageSource: SourceFunction[String],
                                      configSource: SourceFunction[String],
                                      eventSink: SinkFunction[InternalEvent],
                                      stringSink: SinkFunction[String]
                                     ) {
   def build(): Unit = {
-    env.registerCachedFile(Helpers.resourceAbsolutePath(eventConfigName), "event.conf", false)
+    env.registerCachedFile(eventConfigPath, "event.conf", false)
 
     val messages = env
-      .fromCollection(List("type-1,1", "type-2,2", "type-3,3", "type-4,four", "default,5", "6"))
+      .addSource(messageSource)
       .map(element => (1, element))
       .keyBy(0)
     val configs = env
