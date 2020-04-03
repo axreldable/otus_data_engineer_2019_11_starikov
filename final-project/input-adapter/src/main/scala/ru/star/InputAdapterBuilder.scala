@@ -19,26 +19,30 @@ final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
 
     val messages = env
       .addSource(messageSource)
+      .name("message-stream")
       .map(element => (1, element))
       .keyBy(0)
     val configs = env
       .addSource(configSource)
+      .name("config-stream")
       .map(element => (1, element))
       .keyBy(0)
 
-    //    val events = env.addSource(messageSource)
     val configuredMessages: DataStream[ConfiguredMessage] = messages.connect(configs)
       .flatMap(new MessageConfigMapper())
+      .name("configured-message-stream")
 
     val internalEvens: DataStream[InternalEvent] = configuredMessages
       .filter(_.config.form.equals("internal-event"))
       .map(MessageWorker.internalEventFrom(_))
+      .name("internal-event-stream")
 
     val stringMessages: DataStream[String] = configuredMessages
       .filter(_.config.form.equals("string"))
       .map(MessageWorker.stringMessageFrom(_))
+      .name("string-message-stream")
 
-    internalEvens.map(println(_))
-    stringMessages.map(println(_))
+    internalEvens.addSink(eventSink)
+    stringMessages.addSink(stringSink)
   }
 }
