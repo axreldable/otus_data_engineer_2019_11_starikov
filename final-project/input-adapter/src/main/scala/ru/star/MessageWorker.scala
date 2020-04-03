@@ -9,16 +9,15 @@ object MessageWorker extends LazyLogging {
   }
 
   def internalEventFrom(message: String, eventConfig: EventConfig): InternalEvent = {
-    val transformFunction = Transformations.getByName(eventConfig.transformFunction)
-    val transformedMessage = transformFunction(message)
+    val transformedMessage = transformMessage(message, eventConfig.transformFunction)
 
     InternalEvent(transformedMessage, eventConfig.targetTopic)
   }
 
-  def stringMessageFrom(message: String, eventConfig: EventConfig): InternalEvent = {
+  def stringMessageFrom(message: String, eventConfig: EventConfig): String = {
     val transformedMessage = transformMessage(message, eventConfig.transformFunction)
 
-    InternalEvent(transformedMessage, eventConfig.targetTopic)
+    Array(eventConfig.targetTopic, transformedMessage).mkString(",")
   }
 
   private def transformMessage(message: String, transformFunctionName: String): String = {
