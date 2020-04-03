@@ -23,9 +23,9 @@ object InputAdapterJob extends App with LazyLogging {
     new KeyedSerializationSchema[String]() {
       override def serializeKey(event: String): Array[Byte] = null
 
-      override def serializeValue(event: String): Array[Byte] = getMessage(event).getBytes()
+      override def serializeValue(event: String): Array[Byte] = MessageWorker.getMessage(event).getBytes()
 
-      override def getTargetTopic(event: String): String = getTopic(event)
+      override def getTargetTopic(event: String): String = MessageWorker.getTopic(event)
     },
     params.kafkaProducerProperties
   )
@@ -44,25 +44,11 @@ object InputAdapterJob extends App with LazyLogging {
 
   InputAdapterBuilder(
     env = env,
-    eventConfig = params.eventConfig,
+    eventConfigPath = params.eventConfigPath,
     messageSource = messageConsumer,
     eventSink = eventProducer,
     stringSink = stringProducer
   ).build()
 
-  //  env.execute("input-adapter")
-
-  def getTopic(message: String): String = {
-    message.split(",") match {
-      case Array(topic, message) => topic
-      case _ => throw new RuntimeException(s"Failed to find target topic in string type message!")
-    }
-  }
-
-  def getMessage(message: String): String = {
-    message.split(",") match {
-      case Array(topic, message) => message
-      case _ => throw new RuntimeException(s"Failed to find message in string type message!")
-    }
-  }
+  env.execute("input-adapter")
 }
