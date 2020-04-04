@@ -8,8 +8,8 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import scala.io.Source
 
 object TweetGeneratorApp extends App with StrictLogging {
-  logger.info("Initializing FlowProducer, sleeping for 30 seconds to let Kafka startup")
-  Thread.sleep(30000)
+//  logger.info("Initializing FlowProducer, sleeping for 30 seconds to let Kafka startup")
+//  Thread.sleep(30000)
 
   val props = new Properties()
 
@@ -29,16 +29,18 @@ object TweetGeneratorApp extends App with StrictLogging {
 
   val bufferedSource = Source.fromFile("/tmp/data/training.1600000.processed.noemoticon.csv")
   for (line <- bufferedSource.getLines) {
+    val tweet = line.split(",").last
+    val message = s"type-1,$tweet"
+    println(message)
     Thread.sleep(1000)
     msgCounter += 1
 
-    val data = new ProducerRecord[String, String]("input-adapter-in", line)
+    val data = new ProducerRecord[String, String]("input-adapter-message-in", message)
 
     producer.send(data)
 
     if (msgCounter % 1 == 0) {
       logger.info(s"New messages came, total: $msgCounter messages")
-      logger.info(s"$line")
     }
   }
 

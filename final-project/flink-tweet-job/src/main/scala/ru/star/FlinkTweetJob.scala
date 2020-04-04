@@ -16,11 +16,11 @@ object FlinkTweetJob extends App {
   println("kafkaConsumerProperties", kafkaConsumerProperties)
 
   val eventConsumer = new FlinkKafkaConsumer[String](
-    "input-adapter-out", new SimpleStringSchema(), kafkaConsumerProperties
+    "flink-ml-in", new SimpleStringSchema(), kafkaConsumerProperties
   )
 
   val eventProducer = new FlinkKafkaProducer[String](
-    "output-adapter-in", new SimpleStringSchema(), kafkaConsumerProperties
+    "output-adapter-message-in", new SimpleStringSchema(), kafkaConsumerProperties
   )
 
   env
@@ -28,7 +28,9 @@ object FlinkTweetJob extends App {
     .map(message => {
       println(s"Precessing '$message' in flink-tweet-job.")
       message
-    }).addSink(eventProducer)
+    })
+    .map(message => s"type-1,$message,0")
+    .addSink(eventProducer)
 
   env.execute("flink-tweet-job")
 }

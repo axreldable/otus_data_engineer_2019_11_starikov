@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 
 object OutputAdapterJob extends App {
-  println("input-adapter started.")
+  println("output-adapter started.")
 
   val env = StreamExecutionEnvironment.getExecutionEnvironment
 
@@ -15,8 +15,16 @@ object OutputAdapterJob extends App {
   kafkaConsumerProperties.put("bootstrap.servers", "kafka:9093")
   println("kafkaConsumerProperties", kafkaConsumerProperties)
 
+  val messageConsumer = new FlinkKafkaConsumer[String](
+    "output-adapter-message-in", new SimpleStringSchema(), kafkaConsumerProperties
+  )
+
   val eventConsumer = new FlinkKafkaConsumer[String](
-    "output-adapter-in", new SimpleStringSchema(), kafkaConsumerProperties
+    "output-adapter-message-event-in", new SimpleStringSchema(), kafkaConsumerProperties
+  )
+
+  val configConsumer = new FlinkKafkaConsumer[String](
+    "output-adapter-message-config-in", new SimpleStringSchema(), kafkaConsumerProperties
   )
 
   val eventProducer = new FlinkKafkaProducer[String](
@@ -24,7 +32,7 @@ object OutputAdapterJob extends App {
   )
 
   env
-    .addSource(eventConsumer)
+    .addSource(messageConsumer)
     .map(message => {
       println(s"Precessing '$message' in output-adapter.")
       message
