@@ -1,42 +1,52 @@
 package ru.star
 
-import java.util.Properties
-
 import org.apache.flink.api.common.serialization.SimpleStringSchema
-import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
+import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
+import org.apache.flink.streaming.util.serialization.KeyedSerializationSchema
+import ru.star.models.{InternalEvent, InternalEventDeserializer}
+import ru.star.utils.MessageWorker
 
 object OutputAdapterJob extends App {
   println("output-adapter started.")
 
   val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-  val kafkaConsumerProperties = new Properties()
-  kafkaConsumerProperties.put("bootstrap.servers", "kafka:9093")
-  println("kafkaConsumerProperties", kafkaConsumerProperties)
+  val params = OutputAdapterParams(args)
+  println("params", params)
 
   val messageConsumer = new FlinkKafkaConsumer[String](
-    "output-adapter-message-in", new SimpleStringSchema(), kafkaConsumerProperties
+    "output-adapter-message-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
-  val eventConsumer = new FlinkKafkaConsumer[String](
-    "output-adapter-message-event-in", new SimpleStringSchema(), kafkaConsumerProperties
+  val eventConsumer = new FlinkKafkaConsumer[InternalEvent](
+    "output-adapter-event-in", new InternalEventDeserializer(), params.kafkaConsumerProperties
   )
 
   val configConsumer = new FlinkKafkaConsumer[String](
-    "output-adapter-message-config-in", new SimpleStringSchema(), kafkaConsumerProperties
+    "output-adapter-message-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
-  val eventProducer = new FlinkKafkaProducer[String](
-    "output-adapter-out", new SimpleStringSchema(), kafkaConsumerProperties
+  val stringProducer = new FlinkKafkaProducer[String](
+    "output-adapter-error",
+    new KeyedSerializationSchema[String]() {
+      override def serializeKey(event: String): Array[Byte] = null
+
+      override def serializeValue(event: String): Array[Byte] = MessageWorker.getMessage(event).getBytes()
+
+      override def getTargetTopic(event: String): String = MessageWorker.getTopic(event)
+    },
+    params.kafkaProducerProperties
   )
 
-  env
-    .addSource(messageConsumer)
-    .map(message => {
-      println(s"Precessing '$message' in output-adapter.")
-      message
-    }).addSink(eventProducer)
+  OutputAdapterBuilder(
+    env = env,
+    eventConfigPath = params.eventConfigPath,
+    messageSource = messageConsumer,
+    eventSource = eventConsumer,
+    configSource = configConsumer,
+    stringSink = stringProducer
+  ).build()
 
   env.execute("output-adapter")
 }
