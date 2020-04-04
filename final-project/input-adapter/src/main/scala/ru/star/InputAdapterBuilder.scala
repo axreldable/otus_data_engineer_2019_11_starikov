@@ -32,17 +32,18 @@ final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
       .flatMap(new MessageConfigMapper())
       .name("configured-message-stream")
 
-    val internalEvens: DataStream[InternalEvent] = configuredMessages
+    configuredMessages
       .filter(_.config.form.equals("internal-event"))
       .map(MessageWorker.internalEventFrom(_))
       .name("internal-event-stream")
+      .addSink(eventSink)
+      .name("internal-event-kafka-sink")
 
-    val stringMessages: DataStream[String] = configuredMessages
+    configuredMessages
       .filter(_.config.form.equals("string"))
       .map(MessageWorker.stringMessageFrom(_))
       .name("string-message-stream")
-
-    internalEvens.addSink(eventSink)
-    stringMessages.addSink(stringSink)
+      .addSink(stringSink)
+      .name("string-message-kafka-sink")
   }
 }
