@@ -15,6 +15,7 @@ run-flink:
 	docker-compose -f docker-compose-flink.yaml up --remove-orphans -d && \
     ./deploy_jobs.sh
 
-run-structured-consumer:
-	docker-compose -f docker-compose-structured-consumer.yaml build
-	docker-compose -f docker-compose-structured-consumer.yaml up
+
+run-generator:
+	docker-compose -f docker-compose-generator.yaml down && \
+    docker-compose -f docker-compose-generator.yaml up --remove-orphans -d

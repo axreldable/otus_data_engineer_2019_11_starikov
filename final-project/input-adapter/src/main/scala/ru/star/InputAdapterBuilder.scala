@@ -5,7 +5,7 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import ru.star.map.MessageConfigMapper
 import ru.star.models.{ConfiguredMessage, InternalEvent}
-import ru.star.utils.{Helpers, MessageWorker}
+import ru.star.utils.MessageWorker
 
 final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
                                      eventConfigPath: String,

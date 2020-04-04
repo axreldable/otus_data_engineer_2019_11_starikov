@@ -26,7 +26,6 @@ class MessageConfigMapper extends RichCoFlatMapFunction[(Int, String), (Int, Str
 
   override def flatMap1(keyedMessage: (Int, String), out: Collector[ConfiguredMessage]): Unit = {
     val message = keyedMessage._2
-    println(s"Get message $message")
 
     if (currentConfig.value() == null) {
       val confFile = getRuntimeContext.getDistributedCache.getFile("event.conf")
