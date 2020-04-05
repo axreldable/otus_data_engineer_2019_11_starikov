@@ -1,13 +1,15 @@
 version: '3'
 services:
-#  generator:
-#    build:
-#      context: ./generator
-#    depends_on:
-#      - kafka
+  generator:
+    build:
+      context: ./generator
+    depends_on:
+      - kafka
 
   jobmanager:
     image: flink:1.10.0-scala_2.11
+    depends_on:
+      - kafka
     expose:
       - "6123"
     ports:
@@ -52,12 +54,14 @@ services:
       - KAFKA_ADVERTISED_PORT=9092
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - JMX_PORT=9999
-      - KAFKA_CREATE_TOPICS=input-adapter-message-in:1:1,input-adapter-config-in:1:1
+      - KAFKA_CREATE_TOPICS=input-adapter-message-in:1:1,input-adapter-config-in:1:1,flink-ml-in:1:1,output-adapter-message-in:1:1,output-adapter-event-in:1:1,output-adapter-config-in:1:1,flink-ml-result:1:1
 
   kafka-jmx-exporter:
     build: ./kafka-prometheus-monitoring/prometheus-jmx-exporter
     ports:
       - "8080:8080"
+    depends_on:
+      - kafka
     links:
       - kafka
     environment:

@@ -24,7 +24,7 @@ object OutputAdapterJob extends App {
   )
 
   val configConsumer = new FlinkKafkaConsumer[String](
-    "output-adapter-message-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
+    "output-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
   val stringProducer = new FlinkKafkaProducer[String](
@@ -32,7 +32,10 @@ object OutputAdapterJob extends App {
     new KeyedSerializationSchema[String]() {
       override def serializeKey(event: String): Array[Byte] = null
 
-      override def serializeValue(event: String): Array[Byte] = MessageWorker.getMessage(event).getBytes()
+      override def serializeValue(event: String): Array[Byte] = {
+        println(s"Try to get message from $event")
+        MessageWorker.getMessage(event).getBytes()
+      }
 
       override def getTargetTopic(event: String): String = MessageWorker.getTopic(event)
     },

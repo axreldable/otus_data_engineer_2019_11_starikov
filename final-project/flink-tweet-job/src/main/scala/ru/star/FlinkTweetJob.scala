@@ -12,7 +12,7 @@ object FlinkTweetJob extends App {
   val env = StreamExecutionEnvironment.getExecutionEnvironment
 
   val kafkaConsumerProperties = new Properties()
-  kafkaConsumerProperties.put("bootstrap.servers", "kafka:9093")
+  kafkaConsumerProperties.put("bootstrap.servers", "localhost:9092")
   println("kafkaConsumerProperties", kafkaConsumerProperties)
 
   val eventConsumer = new FlinkKafkaConsumer[String](

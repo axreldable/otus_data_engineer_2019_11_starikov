@@ -13,7 +13,6 @@ run-flink:
     ./deploy_jobs.sh
 
 run-generator:
-	sbt generator/assembly
 	docker-compose -f docker-compose-generator.yaml build && \
 	docker-compose -f docker-compose-generator.yaml up -d
 
@@ -21,7 +20,7 @@ run-demo:
 	sbt clean
 	sbt assembly
 	make run-infrustructure
-	make run-generator
+#	make run-generator
 
 stop-demo:
 	docker-compose -f docker-compose-generator.yaml down
