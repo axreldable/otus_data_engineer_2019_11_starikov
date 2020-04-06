@@ -11,7 +11,7 @@ lazy val global = project
     input_adapter,
     generator,
     reader,
-    input_adapter_spark,
+    spark_tweet_job,
     flink_tweet_job,
     output_adapter
   )
@@ -89,17 +89,18 @@ lazy val reader = project
     )
   )
 
-lazy val input_adapter_spark = project
-  .in(file("input-adapter-spark"))
+lazy val spark_tweet_job = project
+  .in(file("spark-tweet-job"))
   .settings(
-    name := "input-adapter-spark",
+    name := "spark-tweet-job",
     version := "1.0.0",
     assemblySettings,
     libraryDependencies ++= Seq(
-      Dependencies.sparkCore % Provided,
-      Dependencies.sparkSql % Provided,
-      Dependencies.sparkStreaming % Provided,
-      Dependencies.sparkStreamingKafka % Provided,
+      Dependencies.sparkCore,
+      Dependencies.sparkSql,
+      Dependencies.sparkStreaming,
+      Dependencies.sparkStreamingKafka,
+      Dependencies.sparkMlLib,
       Dependencies.kafkaClients,
       Dependencies.logback,
       Dependencies.typesafeLogging,

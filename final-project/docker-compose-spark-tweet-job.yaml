@@ -1,0 +1,7 @@
+version: '3'
+services:
+  spark-tweet-job:
+    build:
+      context: ./spark-tweet-job
+    environment:
+      - MONGO_SERVER=docker.for.mac.localhost

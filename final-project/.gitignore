@@ -1,1 +1,3 @@
 /derby.log
+/spark-tweet-job/data/
+/spark-tweet-job/models/

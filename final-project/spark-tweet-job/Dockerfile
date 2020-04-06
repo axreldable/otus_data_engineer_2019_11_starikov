@@ -43,6 +43,6 @@ COPY ./target /usr/bin/app
 WORKDIR /usr/bin/app
 
 ENTRYPOINT /usr/local/spark/bin/spark-submit \
-		--class "ru.star.InputAdapterJob" \
+		--class "ru.star.SparkTweetJob" \
 		--master "local[2]" \
-		scala-2.11/input-adapter-spark_1.0.0.jar
+		scala-2.11/spark-tweet-job_1.0.0.jar
