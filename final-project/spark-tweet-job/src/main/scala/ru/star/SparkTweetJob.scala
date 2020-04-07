@@ -46,7 +46,7 @@ object SparkTweetJob extends App with StrictLogging {
     .withColumn("is_positive", when($"probability_positive" > 0.5, 1).otherwise(0))
     .select("tweet", "is_positive")
     .withColumn("value",
-      concat(lit("type-1"), lit(","), col("tweet"), lit(","),
+      concat(lit("type-2"), lit(","), col("tweet"), lit(","),
         col("is_positive").cast(StringType)))
     .select("value")
 
