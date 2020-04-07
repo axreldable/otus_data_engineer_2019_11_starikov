@@ -104,6 +104,7 @@ lazy val spark_tweet_job = project
       Dependencies.kafkaClients,
       Dependencies.logback,
       Dependencies.typesafeLogging,
+      Dependencies.pureConfig,
     )
   )
 
