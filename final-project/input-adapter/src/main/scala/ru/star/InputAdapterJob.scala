@@ -17,15 +17,15 @@ object InputAdapterJob extends App with LazyLogging {
   println("params", params)
 
   val messageConsumer = new FlinkKafkaConsumer[String](
-    "input-adapter-message-in", new SimpleStringSchema(), params.kafkaConsumerProperties
+    "ml-stream-input-adapter-message-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
   val configConsumer = new FlinkKafkaConsumer[String](
-    "input-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
+    "ml-stream-input-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
   val stringProducer = new FlinkKafkaProducer[String](
-    "input-adapter-error",
+    "ml-stream-input-adapter-error",
     new KeyedSerializationSchema[String]() {
       override def serializeKey(event: String): Array[Byte] = null
 
@@ -37,7 +37,7 @@ object InputAdapterJob extends App with LazyLogging {
   )
 
   val eventProducer = new FlinkKafkaProducer[InternalEvent](
-    "input-adapter-error",
+    "ml-stream-input-adapter-error",
     new KeyedSerializationSchema[InternalEvent]() {
       override def serializeKey(event: InternalEvent): Array[Byte] = null
 

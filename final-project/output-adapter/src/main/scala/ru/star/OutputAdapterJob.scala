@@ -16,19 +16,19 @@ object OutputAdapterJob extends App {
   println("params", params)
 
   val messageConsumer = new FlinkKafkaConsumer[String](
-    "output-adapter-message-in", new SimpleStringSchema(), params.kafkaConsumerProperties
+    "ml-stream-output-adapter-message-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
   val eventConsumer = new FlinkKafkaConsumer[InternalEvent](
-    "output-adapter-event-in", new InternalEventDeserializer(), params.kafkaConsumerProperties
+    "ml-stream-output-adapter-event-in", new InternalEventDeserializer(), params.kafkaConsumerProperties
   )
 
   val configConsumer = new FlinkKafkaConsumer[String](
-    "output-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
+    "ml-stream-output-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
   val stringProducer = new FlinkKafkaProducer[String](
-    "output-adapter-error",
+    "ml-stream-output-adapter-error",
     new KeyedSerializationSchema[String]() {
       override def serializeKey(event: String): Array[Byte] = null
 

@@ -4,7 +4,7 @@
 rm -r /usr/local/var/lib/kafka-logs/*
 zookeeper-server-start /usr/local/etc/kafka/zookeeper.properties
 kafka-server-start /usr/local/etc/kafka/server.properties
-kafka-topics --zookeeper localhost:2181 --delete --topic '.*'
+kafka-topics --zookeeper localhost:2181 --delete --topic 'ml-stream-.*'
 
 # start Flink cluster
 ~/Desktop/programs/flink/flink-1.10.0/bin/start-cluster.sh

@@ -33,7 +33,7 @@ object TweetGeneratorApp extends App with StrictLogging {
     println(message1)
     Thread.sleep(1000)
 
-    val targetTopic = "input-adapter-message-in"
+    val targetTopic = "ml-stream-input-adapter-message-in"
     producer.send(new ProducerRecord[String, String](targetTopic, message1))
     producer.send(new ProducerRecord[String, String](targetTopic, message2))
     producer.send(new ProducerRecord[String, String](targetTopic, message3))
