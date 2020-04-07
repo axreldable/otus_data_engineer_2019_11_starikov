@@ -11,20 +11,19 @@ object FlinkTweetJob extends App {
 
   val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-  val kafkaConsumerProperties = new Properties()
-  kafkaConsumerProperties.put("bootstrap.servers", "localhost:9092")
-  println("kafkaConsumerProperties", kafkaConsumerProperties)
+  val params = FlinkTweetParams(args)
+  println("params", params)
 
-  val eventConsumer = new FlinkKafkaConsumer[String](
-    "flink-ml-in", new SimpleStringSchema(), kafkaConsumerProperties
+  val messageConsumer = new FlinkKafkaConsumer[String](
+    params.inputTopic, new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
   val eventProducer = new FlinkKafkaProducer[String](
-    "output-adapter-message-in", new SimpleStringSchema(), kafkaConsumerProperties
+    params.outputTopic, new SimpleStringSchema(), params.kafkaProducerProperties
   )
 
   env
-    .addSource(eventConsumer)
+    .addSource(messageConsumer)
     .map(message => {
       println(s"Precessing '$message' in flink-tweet-job.")
       message
