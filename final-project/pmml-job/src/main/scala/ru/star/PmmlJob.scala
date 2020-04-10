@@ -1,11 +1,17 @@
 package ru.star
 
+import io.radicalbit.flink.pmml.scala.models.control.ServingMessage
+import io.radicalbit.flink.pmml.scala.models.input.BaseEvent
+import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.slf4j.LoggerFactory
+import ru.star.model.ServingMessageDeserializer
 import ru.star.models.{InternalEvent, InternalEventDeserializer, InternalEventSerializer}
 
-object PmmlJob extends App with EnsureParameters {
+case class PmmlEvent(modelId: String, occurredOn: Long, internalEvent: InternalEvent) extends BaseEvent
+
+object PmmlJob extends App {
   private val logger = LoggerFactory.getLogger(PmmlJob.getClass)
   logger.info("pmml-job started.")
 
@@ -18,8 +24,8 @@ object PmmlJob extends App with EnsureParameters {
     "ml-stream-pmml-event-in", new InternalEventDeserializer(), params.kafkaProperties
   )
 
-  val modelConsumer = new FlinkKafkaConsumer[InternalEvent](
-    "ml-stream-pmml-event-in", new InternalEventDeserializer(), params.kafkaProperties
+  val modelConsumer = new FlinkKafkaConsumer[ServingMessage](
+    "ml-stream-pmml-model-in", new ServingMessageDeserializer(), params.kafkaProperties
   )
 
   val eventProducer = new FlinkKafkaProducer[InternalEvent](
@@ -28,8 +34,9 @@ object PmmlJob extends App with EnsureParameters {
 
   PmmlJobBuilder(
     env = env,
-    modelConfigPath = params.irisModelPath,
+    modelConfigPath = params.modelConfigPath,
     eventSource = eventConsumer,
+    modelSource = modelConsumer,
     eventSink = eventProducer
   ).build()
 

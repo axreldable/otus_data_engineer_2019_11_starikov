@@ -20,8 +20,8 @@ object IrisProducer extends App with EnsureParameters {
     "ml-stream-pmml-event-in", new InternalEventSerializer(), kafkaProperties
   )
 
-  val irisDataStream: DataStream[InternalEvent] = IrisSource.irisSource(env, None).map(iris => {
-    val r = InternalEvent("iris", "name_1", iris.toString, iris.toVector, None, 1L)
+  val irisDataStream: DataStream[InternalEvent] = IrisSource.irisSource1(env, None).map(iris => {
+    val r = InternalEvent("iris", "123e4567-e89b-12d3-a456-426655440000_1", iris.toString, iris.toVector, Double.NaN)
     println(r)
     r
   })

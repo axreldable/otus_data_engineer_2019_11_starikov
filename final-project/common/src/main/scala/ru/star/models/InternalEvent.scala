@@ -8,7 +8,7 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.ml.math.Vector
 import org.apache.flink.streaming.api.scala.createTypeInformation
 
-case class InternalEvent(messageType: String, modelId: String, message: String, vector: Vector, prediction: Option[Double], occurredOn: Long) extends BaseEvent with Serializable
+case class InternalEvent(messageType: String, modelId: String, message: String, vector: Vector, prediction: Double) extends Serializable
 
 object InternalEvent {
   def deserialize(event: Array[Byte]): InternalEvent = {

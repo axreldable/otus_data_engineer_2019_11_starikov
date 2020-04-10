@@ -34,4 +34,23 @@ object IrisSource {
 
   }
 
+  @throws(classOf[Exception])
+  def irisSource1(env: StreamExecutionEnvironment, availableModelIdOp: Option[Seq[String]]): DataStream[Iris] = {
+    val availableModelId = availableModelIdOp.getOrElse(Seq.empty[String])
+    env.addSource((sc: SourceContext[Iris]) => {
+      def randomVal = RandomMin + (RandomMax - RandomMin) * RandomGenerator.nextDouble()
+      val dataForIris = Seq.fill(NumberOfParameters)(truncateDouble(randomVal))
+      val iris =
+        Iris("123e4567-e89b-12d3-a456-426655440000_1",
+          dataForIris(0),
+          dataForIris(1),
+          dataForIris(2),
+          dataForIris(3),
+          Utils.now())
+      sc.collect(iris)
+      Thread.sleep(1000)
+    })
+
+  }
+
 }
