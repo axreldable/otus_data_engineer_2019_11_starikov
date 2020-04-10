@@ -2,6 +2,8 @@ package ru.star
 
 import com.typesafe.scalalogging._
 import org.apache.spark.ml.PipelineModel
+import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
+import org.apache.spark.mllib.clustering.KMeansModel
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StringType
@@ -33,10 +35,10 @@ object SparkTweetJob extends App with StrictLogging {
   println(lines.isStreaming)
   lines.printSchema
 
-  val words = lines.select("value").as[String].flatMap(_.split(","))
+  val words: DataFrame = lines.select("value").as[String].flatMap(_.split(","))
     .withColumnRenamed("value", "tweet")
 
-  val trainedModel = PipelineModel.load(params.modelPath)
+  val trainedModel: PipelineModel = PipelineModel.load(params.modelPath)
   val getProbabilityNegativeTweet = udf((prediction: org.apache.spark.ml.linalg.Vector) => prediction(1))
   val getProbabilityPositiveTweet = udf((prediction: org.apache.spark.ml.linalg.Vector) => prediction(0))
 
@@ -44,20 +46,23 @@ object SparkTweetJob extends App with StrictLogging {
     .withColumn("probability_negative", getProbabilityNegativeTweet($"probability"))
     .withColumn("probability_positive", getProbabilityPositiveTweet($"probability"))
     .withColumn("is_positive", when($"probability_positive" > 0.5, 1).otherwise(0))
-    .select("tweet", "is_positive")
-    .withColumn("value",
-      concat(lit("type-2"), lit(","), col("tweet"), lit(","),
-        col("is_positive").cast(StringType)))
-    .select("value")
-
-  predictionDf
-    .writeStream
-    .outputMode("append")
-    .format("kafka")
-    .option("checkpointLocation", params.checkpointLocation)
-    .option("kafka.bootstrap.servers", params.outputKafka.bootstrapServers)
-    .option("topic", params.outputKafka.outputTopic)
-    .start()
+      .writeStream.foreachBatch((b, id) =>
+    b.show()
+  ).start()
+//    .select("tweet", "is_positive")
+//    .withColumn("value",
+//      concat(lit("type-2"), lit(","), col("tweet"), lit(","),
+//        col("is_positive").cast(StringType)))
+//    .select("value")
+//
+//  predictionDf
+//    .writeStream
+//    .outputMode("append")
+//    .format("kafka")
+//    .option("checkpointLocation", params.checkpointLocation)
+//    .option("kafka.bootstrap.servers", params.outputKafka.bootstrapServers)
+//    .option("topic", params.outputKafka.outputTopic)
+//    .start()
 
   spark.streams.awaitAnyTermination()
 }

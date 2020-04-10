@@ -13,7 +13,9 @@ lazy val global = project
     reader,
     spark_tweet_job,
     flink_tweet_job,
-    output_adapter
+    output_adapter,
+    pmml_job,
+    common
   )
 
 lazy val input_adapter = project
@@ -29,6 +31,20 @@ lazy val input_adapter = project
       Dependencies.flinkConnectorKafka,
       Dependencies.typesafeLogging
     )
+  ).dependsOn(common)
+
+lazy val common = project
+  .in(file("common"))
+  .settings(
+    name := "common",
+    version := "1.0.0",
+    assemblySettings,
+    libraryDependencies ++= Seq(
+      Dependencies.flinkCore,
+      Dependencies.flinkStreaming,
+      Dependencies.flinkPmml,
+      Dependencies.typesafeLogging
+    )
   )
 
 lazy val flink_tweet_job = project
@@ -41,6 +57,7 @@ lazy val flink_tweet_job = project
       Dependencies.flinkCore,
       Dependencies.flinkStreaming,
       Dependencies.flinkConnectorKafka,
+      Dependencies.pureConfig,
     )
   )
 
@@ -57,7 +74,7 @@ lazy val output_adapter = project
       Dependencies.flinkConnectorKafka,
       Dependencies.typesafeLogging
     )
-  )
+  ).dependsOn(common)
 
 lazy val generator = project
   .in(file("generator"))
@@ -107,6 +124,21 @@ lazy val spark_tweet_job = project
       Dependencies.pureConfig,
     )
   )
+
+lazy val pmml_job = project
+  .in(file("pmml-job"))
+  .settings(
+    name := "pmml-job",
+    version := "1.0.0",
+    assemblySettings,
+    libraryDependencies ++= Seq(
+      Dependencies.flinkCore,
+      Dependencies.flinkStreaming,
+      Dependencies.flinkConnectorKafka,
+      Dependencies.pureConfig,
+      Dependencies.flinkPmml,
+    )
+  ).dependsOn(common)
 
 lazy val assemblySettings = Seq(
   assemblyJarName in assembly := name.value + "_" + version.value + ".jar",

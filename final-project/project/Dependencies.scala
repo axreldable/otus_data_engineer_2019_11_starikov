@@ -15,6 +15,7 @@ object Dependencies {
   lazy val flinkCore = "org.apache.flink" % "flink-core" % flinkVersion
   lazy val flinkStreaming = "org.apache.flink" %% "flink-streaming-scala" % flinkVersion
   lazy val flinkConnectorKafka = "org.apache.flink" %% "flink-connector-kafka" % flinkVersion
+  lazy val flinkPmml = "io.radicalbit" %% "flink-jpmml-scala" % "0.6.3"
 
   lazy val kafkaClients = "org.apache.kafka" % "kafka-clients" % "0.10.0.0"
   lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
@@ -23,5 +24,4 @@ object Dependencies {
   lazy val sparkStreamingKafka = "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion
   lazy val sparkStreamingKafkaAssembly = "org.apache.spark" %% "spark-streaming-kafka-0-10-assembly" % sparkVersion
   lazy val sparkMlLib = "org.apache.spark" %% "spark-mllib" % sparkVersion
-
 }
