@@ -21,7 +21,7 @@ object IrisSource {
         def randomVal = RandomMin + (RandomMax - RandomMin) * RandomGenerator.nextDouble()
         val dataForIris = Seq.fill(NumberOfParameters)(truncateDouble(randomVal))
         val iris =
-          Iris("1",
+          Iris("123e4567-e89b-12d3-a456-426655440000_1",
                dataForIris(0),
                dataForIris(1),
                dataForIris(2),

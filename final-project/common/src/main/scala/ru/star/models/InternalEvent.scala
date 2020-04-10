@@ -2,12 +2,13 @@ package ru.star.models
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream}
 
+import io.radicalbit.flink.pmml.scala.models.input.BaseEvent
 import org.apache.flink.api.common.serialization.{DeserializationSchema, SerializationSchema}
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.ml.math.Vector
 import org.apache.flink.streaming.api.scala.createTypeInformation
 
-case class InternalEvent(messageType: String, message: String, vector: Vector, prediction: Double) extends Serializable
+case class InternalEvent(messageType: String, modelId: String, message: String, vector: Vector, prediction: Option[Double], occurredOn: Long) extends BaseEvent with Serializable
 
 object InternalEvent {
   def deserialize(event: Array[Byte]): InternalEvent = {

@@ -18,13 +18,17 @@ object PmmlJob extends App with EnsureParameters {
     "ml-stream-pmml-event-in", new InternalEventDeserializer(), params.kafkaProperties
   )
 
+  val modelConsumer = new FlinkKafkaConsumer[InternalEvent](
+    "ml-stream-pmml-event-in", new InternalEventDeserializer(), params.kafkaProperties
+  )
+
   val eventProducer = new FlinkKafkaProducer[InternalEvent](
     "ml-stream-output-adapter-event-in", new InternalEventSerializer(), params.kafkaProperties
   )
 
   PmmlJobBuilder(
     env = env,
-    irisModelPath = params.irisModelPath,
+    modelConfigPath = params.irisModelPath,
     eventSource = eventConsumer,
     eventSink = eventProducer
   ).build()

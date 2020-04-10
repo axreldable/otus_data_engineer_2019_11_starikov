@@ -24,4 +24,7 @@ object Dependencies {
   lazy val sparkStreamingKafka = "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion
   lazy val sparkStreamingKafkaAssembly = "org.apache.spark" %% "spark-streaming-kafka-0-10-assembly" % sparkVersion
   lazy val sparkMlLib = "org.apache.spark" %% "spark-mllib" % sparkVersion
+
+  lazy val slf4j = "org.slf4j" % "slf4j-api" % "1.7.30"
+  lazy val slf4j12 = "org.slf4j" % "slf4j-log4j12" % "1.7.30"
 }

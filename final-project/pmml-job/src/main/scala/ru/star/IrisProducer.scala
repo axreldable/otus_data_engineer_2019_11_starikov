@@ -21,7 +21,7 @@ object IrisProducer extends App with EnsureParameters {
   )
 
   val irisDataStream: DataStream[InternalEvent] = IrisSource.irisSource(env, None).map(iris => {
-    val r = InternalEvent("iris", iris.toString, iris.toVector, Double.NaN)
+    val r = InternalEvent("iris", "name_1", iris.toString, iris.toVector, None, 1L)
     println(r)
     r
   })

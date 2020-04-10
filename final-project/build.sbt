@@ -43,7 +43,6 @@ lazy val common = project
       Dependencies.flinkCore,
       Dependencies.flinkStreaming,
       Dependencies.flinkPmml,
-      Dependencies.typesafeLogging
     )
   )
 
@@ -132,11 +131,10 @@ lazy val pmml_job = project
     version := "1.0.0",
     assemblySettings,
     libraryDependencies ++= Seq(
-      Dependencies.flinkCore,
-      Dependencies.flinkStreaming,
       Dependencies.flinkConnectorKafka,
       Dependencies.pureConfig,
-      Dependencies.flinkPmml,
+      Dependencies.slf4j,
+      Dependencies.slf4j12,
     )
   ).dependsOn(common)
 
