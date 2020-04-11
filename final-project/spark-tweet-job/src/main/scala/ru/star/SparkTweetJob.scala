@@ -48,7 +48,7 @@ object SparkTweetJob extends App with StrictLogging {
   predictionDf
     .select("tweet", "is_positive")
     .withColumn("value",
-      concat(lit("tweet-type"), lit(","), col("tweet"), lit(","),
+      concat(lit("tweet-type"), lit(params.separator), col("tweet"), lit(params.separator),
         col("is_positive").cast(StringType)))
     .select("value")
     .writeStream

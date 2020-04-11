@@ -5,7 +5,7 @@ import ru.star.models.{ConfiguredEvent, ConfiguredMessage, InternalEvent, Output
 
 object MessageWorker extends LazyLogging {
   def mapWithConfig(inMessage: String, outputAdapterConfig: OutputAdapterConfig): ConfiguredMessage = {
-    val (messageType, message, prediction) = spitMessage(inMessage)
+    val (messageType, message, prediction) = spitMessage(inMessage, outputAdapterConfig.separator)
     ConfiguredMessage(message, prediction, outputAdapterConfig.getEventConfig(messageType))
   }
 
@@ -13,21 +13,20 @@ object MessageWorker extends LazyLogging {
     ConfiguredEvent(inEvent, outputAdapterConfig.getEventConfig("default"))
   }
 
-  def stringMessageFrom(configuredMessage: ConfiguredMessage): String = {
+  def stringMessageFrom(configuredMessage: ConfiguredMessage): (String, String) = {
     val eventConfig = configuredMessage.config
     val transformedMessage = transformMessage(configuredMessage.message, eventConfig.transformFunction)
     val prediction = configuredMessage.prediction
 
-    Array(eventConfig.targetTopic, transformedMessage, prediction).mkString(",")
+    (eventConfig.targetTopic, Array(transformedMessage, prediction).mkString(eventConfig.separator))
   }
 
-  def stringMessageFrom(configuredEvent: ConfiguredEvent): String = {
+  def stringMessageFrom(configuredEvent: ConfiguredEvent): (String, String) = {
     val eventConfig = configuredEvent.config
     val transformedMessage = transformMessage(configuredEvent.event.message, eventConfig.transformFunction)
-    // todo: implement it
-    val prediction = "0"
+    val prediction = configuredEvent.event.prediction.toString
 
-    Array(eventConfig.targetTopic, transformedMessage, prediction).mkString(",")
+    (eventConfig.targetTopic, Array(transformedMessage, prediction).mkString(eventConfig.separator))
   }
 
   private def transformMessage(message: String, transformFunctionName: String): String = {
@@ -35,26 +34,12 @@ object MessageWorker extends LazyLogging {
     transformFunction(message)
   }
 
-  private def spitMessage(message: String): (String, String, String) = {
-    message.split(",") match {
+  private def spitMessage(message: String, separator: String): (String, String, String) = {
+    message.split(separator) match {
       case Array(messageType, message, prediction) => (messageType, message, prediction)
       case _ =>
         logger.info(s"Failed to split message=$message. Use default type.")
         ("default", message, "")
-    }
-  }
-
-  def getTopic(message: String): String = {
-    message.split(",") match {
-      case Array(topic, message, prediction) => topic
-      case _ => throw new RuntimeException(s"Failed to find target topic in string type message!")
-    }
-  }
-
-  def getMessage(message: String): String = {
-    message.split(",") match {
-      case Array(topic, message, prediction) => Array(message, prediction).mkString(",")
-      case _ => throw new RuntimeException(s"Failed to find message in string type message!")
     }
   }
 }

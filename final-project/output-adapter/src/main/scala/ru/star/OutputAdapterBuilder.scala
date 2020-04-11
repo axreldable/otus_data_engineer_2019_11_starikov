@@ -12,7 +12,7 @@ final case class OutputAdapterBuilder(env: StreamExecutionEnvironment,
                                       messageSource: SourceFunction[String],
                                       eventSource: SourceFunction[InternalEvent],
                                       configSource: SourceFunction[String],
-                                      stringSink: SinkFunction[String]
+                                      stringSink: SinkFunction[(String, String)]
                                      ) {
   def build(): Unit = {
     env.registerCachedFile(eventConfigPath, "event.conf", false)

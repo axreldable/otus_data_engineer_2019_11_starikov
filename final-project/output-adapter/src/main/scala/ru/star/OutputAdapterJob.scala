@@ -5,7 +5,6 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.KeyedSerializationSchema
 import ru.star.models.{InternalEvent, InternalEventDeserializer}
-import ru.star.utils.MessageWorker
 
 object OutputAdapterJob extends App {
   println("output-adapter started.")
@@ -27,17 +26,18 @@ object OutputAdapterJob extends App {
     "ml-stream-output-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
-  val stringProducer = new FlinkKafkaProducer[String](
-    "ml-stream-output-adapter-error",
-    new KeyedSerializationSchema[String]() {
-      override def serializeKey(event: String): Array[Byte] = null
+  val stringProducer = new FlinkKafkaProducer[(String, String)](
+    "ml-stream-input-adapter-error",
+    new KeyedSerializationSchema[(String, String)]() {
+      override def serializeKey(messageTuple: (String, String)): Array[Byte] = null
 
-      override def serializeValue(event: String): Array[Byte] = {
-        println(s"Try to get message from $event")
-        MessageWorker.getMessage(event).getBytes()
+      override def serializeValue(messageTuple: (String, String)): Array[Byte] = messageTuple match {
+        case (targetTopic, message) => message.getBytes()
       }
 
-      override def getTargetTopic(event: String): String = MessageWorker.getTopic(event)
+      override def getTargetTopic(messageTuple: (String, String)): String = messageTuple match {
+        case (targetTopic, message) => targetTopic
+      }
     },
     params.kafkaProducerProperties
   )
