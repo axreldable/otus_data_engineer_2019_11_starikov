@@ -40,14 +40,15 @@ object Helpers {
   }
 
   def sendMessages(tweetSource: String, tweetTopic: String, irisTopic: String, producer: KafkaProducer[String, String]): Unit = {
+    val separator = "###"
     val bufferedSource = Source.fromFile(tweetSource)
     for (line <- bufferedSource.getLines) {
       val tweet = line.split(",").last
-      val message = s"tweet-type,$tweet"
+      val message = s"tweet-type$separator$tweet"
       println(message)
       producer.send(new ProducerRecord[String, String](tweetTopic, message))
 
-      val iris = s"iris-type,${createIris()}"
+      val iris = s"iris-type$separator${createIris()}"
       println(iris)
       producer.send(new ProducerRecord[String, String](irisTopic, iris))
 

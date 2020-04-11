@@ -11,8 +11,8 @@ final case class InputAdapterBuilder(env: StreamExecutionEnvironment,
                                      eventConfigPath: String,
                                      messageSource: SourceFunction[String],
                                      configSource: SourceFunction[String],
-                                     eventSink: SinkFunction[InternalEvent],
-                                     stringSink: SinkFunction[String]
+                                     eventSink: SinkFunction[(String, InternalEvent)],
+                                     stringSink: SinkFunction[(String, String)]
                                     ) {
   def build(): Unit = {
     env.registerCachedFile(eventConfigPath, "event.conf", false)

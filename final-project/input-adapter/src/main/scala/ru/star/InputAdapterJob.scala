@@ -6,7 +6,6 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.KeyedSerializationSchema
 import ru.star.models.InternalEvent
-import ru.star.utils.MessageWorker
 
 object InputAdapterJob extends App with LazyLogging {
   println("input-adapter started.")
@@ -24,26 +23,34 @@ object InputAdapterJob extends App with LazyLogging {
     "ml-stream-input-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
   )
 
-  val stringProducer = new FlinkKafkaProducer[String](
+  val stringProducer = new FlinkKafkaProducer[(String, String)](
     "ml-stream-input-adapter-error",
-    new KeyedSerializationSchema[String]() {
-      override def serializeKey(event: String): Array[Byte] = null
+    new KeyedSerializationSchema[(String, String)]() {
+      override def serializeKey(messageTuple: (String, String)): Array[Byte] = null
 
-      override def serializeValue(event: String): Array[Byte] = MessageWorker.getMessage(event).getBytes()
+      override def serializeValue(messageTuple: (String, String)): Array[Byte] = messageTuple match {
+        case (targetTopic, message) => message.getBytes()
+      }
 
-      override def getTargetTopic(event: String): String = MessageWorker.getTopic(event)
+      override def getTargetTopic(messageTuple: (String, String)): String = messageTuple match {
+        case (targetTopic, message) => targetTopic
+      }
     },
     params.kafkaProducerProperties
   )
 
-  val eventProducer = new FlinkKafkaProducer[InternalEvent](
+  val eventProducer = new FlinkKafkaProducer[(String, InternalEvent)](
     "ml-stream-input-adapter-error",
-    new KeyedSerializationSchema[InternalEvent]() {
-      override def serializeKey(event: InternalEvent): Array[Byte] = null
+    new KeyedSerializationSchema[(String, InternalEvent)]() {
+      override def serializeKey(eventTuple: (String, InternalEvent)): Array[Byte] = null
 
-      override def serializeValue(event: InternalEvent): Array[Byte] = event.serialize()
+      override def serializeValue(eventTuple: (String, InternalEvent)): Array[Byte] = eventTuple match {
+        case (targetTopic, event) => InternalEvent.serialize(event)
+      }
 
-      override def getTargetTopic(event: InternalEvent): String = event.targetTopic
+      override def getTargetTopic(eventTuple: (String, InternalEvent)): String = eventTuple match {
+        case (targetTopic, event) => targetTopic
+      }
     },
     params.kafkaProducerProperties
   )

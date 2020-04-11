@@ -2,7 +2,6 @@ package ru.star
 
 import java.util.Properties
 
-import com.typesafe.scalalogging.LazyLogging
 import pureconfig._
 //import pureconfig.generic.auto._
 import pureconfig.generic.auto._
