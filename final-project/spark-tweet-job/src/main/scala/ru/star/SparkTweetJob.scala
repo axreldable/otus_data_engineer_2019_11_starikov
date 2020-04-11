@@ -2,8 +2,6 @@ package ru.star
 
 import com.typesafe.scalalogging._
 import org.apache.spark.ml.PipelineModel
-import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
-import org.apache.spark.mllib.clustering.KMeansModel
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StringType
@@ -28,8 +26,8 @@ object SparkTweetJob extends App with StrictLogging {
   val lines = spark
     .readStream
     .format("kafka")
-    .option("kafka.bootstrap.servers", params.inputKafka.bootstrapServers)
-    .option("subscribe", params.inputKafka.inputTopic)
+    .option("kafka.bootstrap.servers", params.kafkaConfig.bootstrapServers)
+    .option("subscribe", params.kafkaConfig.inputTopic)
     .load()
 
   println(lines.isStreaming)
@@ -46,23 +44,20 @@ object SparkTweetJob extends App with StrictLogging {
     .withColumn("probability_negative", getProbabilityNegativeTweet($"probability"))
     .withColumn("probability_positive", getProbabilityPositiveTweet($"probability"))
     .withColumn("is_positive", when($"probability_positive" > 0.5, 1).otherwise(0))
-      .writeStream.foreachBatch((b, id) =>
-    b.show()
-  ).start()
-//    .select("tweet", "is_positive")
-//    .withColumn("value",
-//      concat(lit("type-2"), lit(","), col("tweet"), lit(","),
-//        col("is_positive").cast(StringType)))
-//    .select("value")
-//
-//  predictionDf
-//    .writeStream
-//    .outputMode("append")
-//    .format("kafka")
-//    .option("checkpointLocation", params.checkpointLocation)
-//    .option("kafka.bootstrap.servers", params.outputKafka.bootstrapServers)
-//    .option("topic", params.outputKafka.outputTopic)
-//    .start()
+
+  predictionDf
+    .select("tweet", "is_positive")
+    .withColumn("value",
+      concat(lit("tweet-type"), lit(","), col("tweet"), lit(","),
+        col("is_positive").cast(StringType)))
+    .select("value")
+    .writeStream
+    .outputMode("append")
+    .format("kafka")
+    .option("checkpointLocation", params.checkpointLocation)
+    .option("kafka.bootstrap.servers", params.kafkaConfig.bootstrapServers)
+    .option("topic", params.kafkaConfig.outputTopic)
+    .start()
 
   spark.streams.awaitAnyTermination()
 }
