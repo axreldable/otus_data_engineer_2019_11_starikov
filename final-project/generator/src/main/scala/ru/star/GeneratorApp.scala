@@ -1,11 +1,12 @@
 package ru.star
 
-import com.typesafe.scalalogging._
+import io.radicalbit.flink.pmml.scala.models.control.ServingMessage
+import org.apache.kafka.common.serialization.StringSerializer
 
-object GeneratorApp extends App with StrictLogging {
+object GeneratorApp extends App {
 
-  val stringProducer = Helpers.initStringProducer("localhost:9092")
-  val modelProducer = Helpers.initModelProducer("localhost:9092")
+  val stringProducer = Helpers.initProducer[String]("localhost:9092", new StringSerializer().getClass.getName)
+  val modelProducer = Helpers.initProducer[ServingMessage]("localhost:9092", new ServingMessageSerializer().getClass.getName)
 
   Helpers.sendModel("ml-stream-pmml-model-in", modelProducer)
 

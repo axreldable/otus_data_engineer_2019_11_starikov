@@ -88,8 +88,6 @@ lazy val generator = project
       Dependencies.sparkCore % Provided,
       Dependencies.sparkSql % Provided,
       Dependencies.kafkaClients,
-      Dependencies.logback,
-      Dependencies.typesafeLogging,
     )
   ).dependsOn(common)
 

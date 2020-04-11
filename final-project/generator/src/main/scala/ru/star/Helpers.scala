@@ -13,27 +13,13 @@ import scala.util.Random
 
 object Helpers {
 
-  def initStringProducer(bootstrapService: String): KafkaProducer[String, String] = {
+  def initProducer[T](bootstrapService: String, serializerName: String): KafkaProducer[String, T] = {
     val props = new Properties()
 
     props.put("bootstrap.servers", bootstrapService)
     props.put("key.serializer", new StringSerializer().getClass.getName)
-    props.put("value.serializer", new StringSerializer().getClass.getName)
-    val producer: KafkaProducer[String, String] = new KafkaProducer[String, String](props)
-    producer.flush()
-
-    println("Kafka producer initialized")
-
-    producer
-  }
-
-  def initModelProducer(bootstrapService: String): KafkaProducer[String, ServingMessage] = {
-    val props = new Properties()
-
-    props.put("bootstrap.servers", bootstrapService)
-    props.put("key.serializer", new StringSerializer().getClass.getName)
-    props.put("value.serializer", new ServingMessageSerializer().getClass.getName)
-    val producer = new KafkaProducer[String, ServingMessage](props)
+    props.put("value.serializer", serializerName)
+    val producer: KafkaProducer[String, T] = new KafkaProducer[String, T](props)
     producer.flush()
 
     println("Kafka producer initialized")
