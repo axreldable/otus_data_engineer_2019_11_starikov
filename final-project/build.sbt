@@ -43,6 +43,9 @@ lazy val common = project
       Dependencies.flinkCore,
       Dependencies.flinkStreaming,
       Dependencies.flinkPmml,
+      Dependencies.slf4j,
+      Dependencies.slf4j12,
+      Dependencies.pureConfig,
     )
   )
 
@@ -88,7 +91,7 @@ lazy val generator = project
       Dependencies.logback,
       Dependencies.typesafeLogging,
     )
-  )
+  ).dependsOn(common)
 
 lazy val reader = project
   .in(file("reader"))
@@ -132,9 +135,6 @@ lazy val pmml_job = project
     assemblySettings,
     libraryDependencies ++= Seq(
       Dependencies.flinkConnectorKafka,
-      Dependencies.pureConfig,
-      Dependencies.slf4j,
-      Dependencies.slf4j12,
     )
   ).dependsOn(common)
 

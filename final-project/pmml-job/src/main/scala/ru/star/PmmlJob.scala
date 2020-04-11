@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory
 import ru.star.model.ServingMessageDeserializer
 import ru.star.models.{InternalEvent, InternalEventDeserializer, InternalEventSerializer}
 
-case class PmmlEvent(modelId: String, occurredOn: Long, internalEvent: InternalEvent) extends BaseEvent
-
 object PmmlJob extends App {
   private val logger = LoggerFactory.getLogger(PmmlJob.getClass)
   logger.info("pmml-job started.")
