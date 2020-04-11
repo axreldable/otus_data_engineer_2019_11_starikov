@@ -1,8 +1,6 @@
 package ru.star
 
 import io.radicalbit.flink.pmml.scala.models.control.ServingMessage
-import io.radicalbit.flink.pmml.scala.models.input.BaseEvent
-import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.slf4j.LoggerFactory

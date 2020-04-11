@@ -5,7 +5,7 @@ import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.KeyedSerializationSchema
-import ru.star.models.InternalEvent
+import ru.star.models.{InternalEvent, Serializer}
 
 object InputAdapterJob extends App with LazyLogging {
   println("input-adapter started.")
@@ -45,7 +45,7 @@ object InputAdapterJob extends App with LazyLogging {
       override def serializeKey(eventTuple: (String, InternalEvent)): Array[Byte] = null
 
       override def serializeValue(eventTuple: (String, InternalEvent)): Array[Byte] = eventTuple match {
-        case (targetTopic, event) => InternalEvent.serialize(event)
+        case (targetTopic, event) => Serializer.serialize(event)
       }
 
       override def getTargetTopic(eventTuple: (String, InternalEvent)): String = eventTuple match {

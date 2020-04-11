@@ -27,7 +27,6 @@ final case class PmmlJobBuilder(env: StreamExecutionEnvironment,
     val predictionEvents: DataStream[InternalEvent] = events
       .withSupportStream(models)
       .evaluate { (event: PmmlEvent, model: PmmlModel) =>
-        println("!!!")
         println(event)
         println(model)
         val vectorized = event.internalEvent.vector
