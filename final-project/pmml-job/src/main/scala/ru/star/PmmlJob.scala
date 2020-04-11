@@ -30,7 +30,6 @@ object PmmlJob extends App {
 
   PmmlJobBuilder(
     env = env,
-    modelConfigPath = params.modelConfigPath,
     eventSource = eventConsumer,
     modelSource = modelConsumer,
     eventSink = eventProducer

@@ -12,14 +12,11 @@ import ru.star.models.InternalEvent
 case class PmmlEvent(modelId: String, occurredOn: Long, internalEvent: InternalEvent) extends BaseEvent
 
 final case class PmmlJobBuilder(env: StreamExecutionEnvironment,
-                                modelConfigPath: String,
                                 eventSource: SourceFunction[InternalEvent],
                                 modelSource: SourceFunction[ServingMessage],
                                 eventSink: SinkFunction[InternalEvent]
                                ) {
   def build(): Unit = {
-    env.registerCachedFile(modelConfigPath, "model.conf", false)
-
     val events = env.addSource(eventSource)
       .map(internalEvent => PmmlEvent(internalEvent.modelId, System.currentTimeMillis(), internalEvent))
     val models = env.addSource(modelSource)

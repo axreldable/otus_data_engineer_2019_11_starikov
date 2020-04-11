@@ -28,6 +28,7 @@ object SparkTweetJob extends App with StrictLogging {
     .format("kafka")
     .option("kafka.bootstrap.servers", params.kafkaConfig.bootstrapServers)
     .option("subscribe", params.kafkaConfig.inputTopic)
+    .option("failOnDataLoss", "false") // todo: read about it
     .load()
 
   println(lines.isStreaming)

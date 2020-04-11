@@ -12,7 +12,6 @@ lazy val global = project
     generator,
     reader,
     spark_tweet_job,
-    flink_tweet_job,
     output_adapter,
     pmml_job,
     common
@@ -45,20 +44,6 @@ lazy val common = project
       Dependencies.flinkPmml,
       Dependencies.slf4j,
       Dependencies.slf4j12,
-      Dependencies.pureConfig,
-    )
-  )
-
-lazy val flink_tweet_job = project
-  .in(file("flink-tweet-job"))
-  .settings(
-    name := "flink-tweet-job",
-    version := "1.0.0",
-    assemblySettings,
-    libraryDependencies ++= Seq(
-      Dependencies.flinkCore,
-      Dependencies.flinkStreaming,
-      Dependencies.flinkConnectorKafka,
       Dependencies.pureConfig,
     )
   )

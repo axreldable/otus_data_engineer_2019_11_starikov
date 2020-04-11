@@ -33,7 +33,7 @@ object Transformations {
   private def irisEvent(modelId: String, message: String): InternalEvent = {
     val Array(sepalLength, sepalWidth, petalLength, petalWidth) = message.split(",").map(_.toDouble)
     InternalEvent(
-      messageType = "iris-event",
+      messageType = "iris-type",
       modelId = modelId,
       message = message,
       vector = DenseVector(sepalLength, sepalWidth, petalLength, petalWidth),

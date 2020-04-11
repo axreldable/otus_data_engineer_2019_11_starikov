@@ -10,7 +10,7 @@ object MessageWorker extends LazyLogging {
   }
 
   def mapWithConfig(inEvent: InternalEvent, outputAdapterConfig: OutputAdapterConfig): ConfiguredEvent = {
-    ConfiguredEvent(inEvent, outputAdapterConfig.getEventConfig("default"))
+    ConfiguredEvent(inEvent, outputAdapterConfig.getEventConfig(inEvent.messageType))
   }
 
   def stringMessageFrom(configuredMessage: ConfiguredMessage): (String, String) = {

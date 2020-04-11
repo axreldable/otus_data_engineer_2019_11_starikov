@@ -8,11 +8,9 @@ import pureconfig.generic.auto._
 
 final case class KafkaConfig(bootstrapServers: String)
 
-final case class PmmlJobParameters(kafkaConfig: KafkaConfig,
-                                   modelConfigPath: String)
+final case class PmmlJobParameters(kafkaConfig: KafkaConfig)
 
-final case class PmmlJobParams(kafkaProperties: Properties,
-                               modelConfigPath: String)
+final case class PmmlJobParams(kafkaProperties: Properties)
 
 object PmmlJobParams {
   def apply(inputArgs: Array[String]): PmmlJobParams = {
@@ -21,6 +19,6 @@ object PmmlJobParams {
     val kafkaProperties = new Properties()
     kafkaProperties.put("bootstrap.servers", config.kafkaConfig.bootstrapServers)
 
-    PmmlJobParams(kafkaProperties, config.modelConfigPath)
+    PmmlJobParams(kafkaProperties)
   }
 }
