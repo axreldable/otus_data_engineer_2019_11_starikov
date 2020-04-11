@@ -31,7 +31,7 @@ object Transformations {
    * Iris event looks like: 4.3,5.6,3.3,3.8
    */
   private def irisEvent(modelId: String, message: String): InternalEvent = {
-    val (sepalLength, sepalWidth, petalLength, petalWidth) = message.split(",")
+    val Array(sepalLength, sepalWidth, petalLength, petalWidth) = message.split(",").map(_.toDouble)
     InternalEvent(
       messageType = "iris-event",
       modelId = modelId,

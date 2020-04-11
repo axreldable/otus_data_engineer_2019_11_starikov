@@ -10,6 +10,7 @@ import pureconfig.ConfigSource
 import ru.star.models.{ConfiguredMessage, InputAdapterConfig}
 import ru.star.utils.MessageWorker
 //import pureconfig.generic.auto._
+import pureconfig.generic.auto._
 
 class MessageConfigMapper extends RichCoFlatMapFunction[(Int, String), (Int, String), ConfiguredMessage] with LazyLogging {
 
