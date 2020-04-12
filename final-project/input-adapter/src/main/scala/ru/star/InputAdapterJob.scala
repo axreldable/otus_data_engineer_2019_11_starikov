@@ -20,7 +20,7 @@ object InputAdapterJob extends App with LazyLogging {
   )
 
   val configConsumer = new FlinkKafkaConsumer[String](
-    "ml-stream-input-adapter-config-in", new SimpleStringSchema(), params.kafkaConsumerProperties
+    "ml-stream-input-adapter-config-in", new SimpleStringSchema(), params.kafkaProducerProperties
   )
 
   val stringProducer = new FlinkKafkaProducer[(String, String)](
