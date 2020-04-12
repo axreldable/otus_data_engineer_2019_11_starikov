@@ -1,7 +1,7 @@
 package ru.star.utils
 
 import com.typesafe.scalalogging.LazyLogging
-import ru.star.models.{ConfiguredEvent, ConfiguredMessage, InternalEvent, OutputAdapterConfig}
+import ru.star.models._
 
 object MessageWorker extends LazyLogging {
   def mapWithConfig(inMessage: String, outputAdapterConfig: OutputAdapterConfig): ConfiguredMessage = {
@@ -14,22 +14,21 @@ object MessageWorker extends LazyLogging {
   }
 
   def stringMessageFrom(configuredMessage: ConfiguredMessage): (String, String) = {
-    val eventConfig = configuredMessage.config
-    val transformedMessage = transformMessage(configuredMessage.message, eventConfig.transformFunction)
-    val prediction = configuredMessage.prediction
-
-    (eventConfig.targetTopic, Array(transformedMessage, prediction).mkString(eventConfig.separator))
+    createTargetEvent(configuredMessage.config, configuredMessage.message, configuredMessage.prediction)
   }
 
   def stringMessageFrom(configuredEvent: ConfiguredEvent): (String, String) = {
-    val eventConfig = configuredEvent.config
-    val transformedMessage = transformMessage(configuredEvent.event.message, eventConfig.transformFunction)
-    val prediction = configuredEvent.event.prediction.toString
-
-    (eventConfig.targetTopic, Array(transformedMessage, prediction).mkString(eventConfig.separator))
+    createTargetEvent(configuredEvent.config, configuredEvent.event.message, configuredEvent.event.prediction.toString)
   }
 
-  private def transformMessage(message: String, transformFunctionName: String): String = {
+  def createTargetEvent(config: EventConfig, message: String, prediction: String): (String, String) = {
+    val transformedMessage = transform(message, config.transformFunctionEvent)
+    val transformedPrediction = transform(prediction, config.transformFunctionPredict)
+
+    (config.targetTopic, Array(transformedMessage, transformedPrediction).mkString(config.separator))
+  }
+
+  private def transform(message: String, transformFunctionName: String): String = {
     val transformFunction = Transformations.getByName(transformFunctionName)
     transformFunction(message)
   }

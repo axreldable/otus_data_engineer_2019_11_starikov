@@ -2,7 +2,10 @@ package ru.star.models
 
 import com.typesafe.scalalogging.LazyLogging
 
-final case class EventConfig(targetTopic: String, transformFunction: String, separator: String) extends Serializable
+final case class EventConfig(targetTopic: String,
+                             transformFunctionEvent: String,
+                             transformFunctionPredict: String,
+                             separator: String) extends Serializable
 
 final case class OutputAdapterConfig(version: String, separator: String, transformConfig: Map[String, EventConfig])
   extends Serializable with LazyLogging {
