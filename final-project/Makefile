@@ -16,6 +16,10 @@ run-generator:
 	docker-compose -f docker-compose-generator.yaml build && \
 	docker-compose -f docker-compose-generator.yaml up -d
 
+run-kafka:
+	docker-compose -f docker-compose-kafka-monitoring.yaml build && \
+	docker-compose -f docker-compose-kafka-monitoring.yaml up -d
+
 run-demo:
 	sbt clean
 	sbt assembly
