@@ -27,7 +27,7 @@ object OutputAdapterJob extends App {
   )
 
   val stringProducer = new FlinkKafkaProducer[(String, String)](
-    "ml-stream-input-adapter-error",
+    "ml-stream-output-adapter-error",
     new KeyedSerializationSchema[(String, String)]() {
       override def serializeKey(messageTuple: (String, String)): Array[Byte] = null
 
