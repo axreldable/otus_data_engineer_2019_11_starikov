@@ -312,7 +312,7 @@
               "to": "null"
             }
           ],
-          "span": 2,
+          "span": 3,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -331,88 +331,6 @@
           ],
           "thresholds": "",
           "title": "ml-stream-spark-tweet-in",
-          "transparent": false,
-          "type": "singlestat",
-          "valueFontSize": "200%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "Prometheus",
-          "decimals": null,
-          "editable": true,
-          "error": false,
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "height": "300",
-          "id": 17,
-          "interval": null,
-          "isNew": true,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": " messages",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "30%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "targets": [
-            {
-              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-pmml-event-in\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-pmml-event-in\" })",
-              "intervalFactor": 2,
-              "legendFormat": "",
-              "metric": "",
-              "refId": "A",
-              "step": 20
-            }
-          ],
-          "thresholds": "",
-          "title": "ml-stream-pmml-event-in",
           "transparent": false,
           "type": "singlestat",
           "valueFontSize": "200%",
@@ -476,7 +394,171 @@
               "to": "null"
             }
           ],
-          "span": 2,
+          "span": 3,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "targets": [
+            {
+              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-spark-tweet-result\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-spark-tweet-result\" })",
+              "intervalFactor": 2,
+              "legendFormat": "",
+              "metric": "",
+              "refId": "A",
+              "step": 20
+            }
+          ],
+          "thresholds": "",
+          "title": "ml-stream-spark-tweet-result",
+          "transparent": false,
+          "type": "singlestat",
+          "valueFontSize": "200%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "Prometheus",
+          "decimals": null,
+          "editable": true,
+          "error": false,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "height": "",
+          "id": 17,
+          "interval": null,
+          "isNew": true,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": " messages",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "30%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 4,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "targets": [
+            {
+              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-pmml-event-in\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-pmml-event-in\" })",
+              "intervalFactor": 2,
+              "legendFormat": "",
+              "metric": "",
+              "refId": "A",
+              "step": 20
+            }
+          ],
+          "thresholds": "",
+          "title": "ml-stream-pmml-event-in",
+          "transparent": false,
+          "type": "singlestat",
+          "valueFontSize": "200%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "Prometheus",
+          "decimals": null,
+          "editable": true,
+          "error": false,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "height": "",
+          "id": 23,
+          "interval": null,
+          "isNew": true,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": " messages",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "30%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 4,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -528,7 +610,8 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 19,
+          "height": "",
+          "id": 24,
           "interval": null,
           "isNew": true,
           "links": [],
@@ -557,7 +640,7 @@
               "to": "null"
             }
           ],
-          "span": 6,
+          "span": 4,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -566,7 +649,7 @@
           },
           "targets": [
             {
-              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-output-adapter-message-in\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-output-adapter-message-in\" })",
+              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-pmml-event-result\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-pmml-event-result\" })",
               "intervalFactor": 2,
               "legendFormat": "",
               "metric": "",
@@ -575,88 +658,7 @@
             }
           ],
           "thresholds": "",
-          "title": "ml-stream-output-adapter-message-in",
-          "transparent": false,
-          "type": "singlestat",
-          "valueFontSize": "200%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "Prometheus",
-          "decimals": null,
-          "editable": true,
-          "error": false,
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 20,
-          "interval": null,
-          "isNew": true,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": " messages",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "30%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 6,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "targets": [
-            {
-              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-output-adapter-event-in\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-output-adapter-event-in\" })",
-              "intervalFactor": 2,
-              "legendFormat": "",
-              "metric": "",
-              "refId": "A",
-              "step": 20
-            }
-          ],
-          "thresholds": "",
-          "title": "ml-stream-output-adapter-event-in",
+          "title": "ml-stream-pmml-event-result",
           "transparent": false,
           "type": "singlestat",
           "valueFontSize": "200%",
@@ -819,6 +821,168 @@
           ],
           "thresholds": "",
           "title": "ml-stream-output-adapter-error",
+          "transparent": false,
+          "type": "singlestat",
+          "valueFontSize": "200%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "Prometheus",
+          "decimals": null,
+          "editable": true,
+          "error": false,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 19,
+          "interval": null,
+          "isNew": true,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": " messages",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "30%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 6,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "targets": [
+            {
+              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-output-adapter-message-in\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-output-adapter-message-in\" })",
+              "intervalFactor": 2,
+              "legendFormat": "",
+              "metric": "",
+              "refId": "A",
+              "step": 20
+            }
+          ],
+          "thresholds": "",
+          "title": "ml-stream-output-adapter-message-in",
+          "transparent": false,
+          "type": "singlestat",
+          "valueFontSize": "200%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "Prometheus",
+          "decimals": null,
+          "editable": true,
+          "error": false,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 20,
+          "interval": null,
+          "isNew": true,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": " messages",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "30%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 6,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "targets": [
+            {
+              "expr": "sum(kafka_log_log_value{ name=\"LogEndOffset\" , topic = \"ml-stream-output-adapter-event-in\" }) - sum(kafka_log_log_value{ name=\"LogStartOffset\", topic = \"ml-stream-output-adapter-event-in\" })",
+              "intervalFactor": 2,
+              "legendFormat": "",
+              "metric": "",
+              "refId": "A",
+              "step": 20
+            }
+          ],
+          "thresholds": "",
+          "title": "ml-stream-output-adapter-event-in",
           "transparent": false,
           "type": "singlestat",
           "valueFontSize": "200%",
@@ -1758,6 +1922,6 @@
   },
   "refresh": false,
   "schemaVersion": 12,
-  "version": 0,
+  "version": 1,
   "links": []
 }
