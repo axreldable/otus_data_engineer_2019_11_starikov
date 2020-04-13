@@ -33,6 +33,7 @@ object SparkTweetJob extends App with StrictLogging {
 
   println(lines.isStreaming)
   lines.printSchema
+  println(s"modelPath:${params.modelPath}")
 
   val words: DataFrame = lines.select("value").as[String].flatMap(_.split(","))
     .withColumnRenamed("value", "tweet")

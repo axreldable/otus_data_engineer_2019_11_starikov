@@ -5,8 +5,10 @@ import org.apache.kafka.common.serialization.StringSerializer
 
 object GeneratorApp extends App {
 
-  val stringProducer = Helpers.initProducer[String]("localhost:9092", new StringSerializer().getClass.getName)
-  val modelProducer = Helpers.initProducer[ServingMessage]("localhost:9092", new ServingMessageSerializer().getClass.getName)
+  val params = GeneratorParams(args)
+
+  val stringProducer = Helpers.initProducer[String](params.bootstrapServices, new StringSerializer().getClass.getName)
+  val modelProducer = Helpers.initProducer[ServingMessage](params.bootstrapServices, new ServingMessageSerializer().getClass.getName)
 
   Helpers.sendModel("ml-stream-pmml-model-in", modelProducer)
 

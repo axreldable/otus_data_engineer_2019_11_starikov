@@ -8,4 +8,4 @@ RUN mkdir -p ${DATA_DIR} && \
 
 COPY ./target /usr/bin/app
 WORKDIR /usr/bin/app
-ENTRYPOINT java -jar scala-2.11/generator_1.0.0.jar ru.star.TweetGeneratorApp
+ENTRYPOINT java -jar scala-2.11/generator_1.0.0.jar --bootstrap-servers kafka:9093

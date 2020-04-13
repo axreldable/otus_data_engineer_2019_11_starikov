@@ -37,9 +37,10 @@ RUN cd /usr/local/spark/jars && wget https://repo1.maven.org/maven2/org/apache/s
 RUN cd /usr/local/spark/jars && wget https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.0.0/kafka-clients-2.0.0.jar
 RUN cd /usr/local/spark/jars && wget https://repo1.maven.org/maven2/org/apache/spark/spark-tags_2.11/2.4.3/spark-tags_2.11-2.4.3.jar
 RUN cd /usr/local/spark/jars && wget https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.11/2.4.3/spark-sql-kafka-0-10_2.11-2.4.3.jar
-RUN cd /usr/local/spark/jars && wget https://repo1.maven.org/maven2/postgresql/postgresql/9.1-901-1.jdbc4/postgresql-9.1-901-1.jdbc4.jar
+#RUN cd /usr/local/spark/jars && wget https://repo1.maven.org/maven2/postgresql/postgresql/9.1-901-1.jdbc4/postgresql-9.1-901-1.jdbc4.jar
 
 COPY ./target /usr/bin/app
+COPY ./models /usr/bin/app
 WORKDIR /usr/bin/app
 
 ENTRYPOINT /usr/local/spark/bin/spark-submit \

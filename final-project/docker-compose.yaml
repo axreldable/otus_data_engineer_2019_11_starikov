@@ -6,6 +6,12 @@ services:
     depends_on:
       - kafka
 
+  spark-tweet-job:
+    build:
+      context: ./spark-tweet-job
+    depends_on:
+      - kafka
+
   jobmanager:
     image: flink:1.10.0-scala_2.11
     depends_on:
