@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "Building project..."
+sbt assembly -mem 4096
+
 echo "Stopping previous running..."
 ./scripts/stop.sh
 
