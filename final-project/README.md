@@ -36,7 +36,7 @@ Connect to Kafka on the localhost:9092 and use something like [Conductor](https:
 [Flink cluster UI](http://localhost:8081)  
 
 #### Details
-See details in the presentation
+See details in the [presentation](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/blob/master/final-project/presentation.pptx)
 
 #### Architecture
 ![Architecture](https://github.com/axreldable/otus_data_engineer_2019_11_starikov/blob/master/final-project/images/otus-ml-streaming-system.png)
